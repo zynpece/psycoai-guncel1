@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "fiIUENGSxSQ=",
+  "success": true,
+  "projectFilePath": "/Users/nidaustun/psycoai-guncel1/PsycoAI.csproj",
+  "expectedPackageFiles": [
+    "/Users/nidaustun/.nuget/packages/microsoft.data.sqlite/9.0.4/microsoft.data.sqlite.9.0.4.nupkg.sha512",
+    "/Users/nidaustun/.nuget/packages/microsoft.data.sqlite.core/9.0.4/microsoft.data.sqlite.core.9.0.4.nupkg.sha512",
+    "/Users/nidaustun/.nuget/packages/sqlitepclraw.bundle_e_sqlite3/2.1.10/sqlitepclraw.bundle_e_sqlite3.2.1.10.nupkg.sha512",
+    "/Users/nidaustun/.nuget/packages/sqlitepclraw.core/2.1.10/sqlitepclraw.core.2.1.10.nupkg.sha512",
+    "/Users/nidaustun/.nuget/packages/sqlitepclraw.lib.e_sqlite3/2.1.10/sqlitepclraw.lib.e_sqlite3.2.1.10.nupkg.sha512",
+    "/Users/nidaustun/.nuget/packages/sqlitepclraw.provider.e_sqlite3/2.1.10/sqlitepclraw.provider.e_sqlite3.2.1.10.nupkg.sha512"
+  ],
+  "logs": []
+}

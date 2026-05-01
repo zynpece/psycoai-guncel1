@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsycoAI — Yeni Analiz</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F0EEE9;display:flex;min-height:100vh;color:#111}
+.sb{width:220px;background:#1B2D4F;display:flex;flex-direction:column;min-height:100vh;flex-shrink:0}
+.sb-top{padding:18px 18px 15px;border-bottom:1px solid rgba(255,255,255,.08)}
+.sb-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.sb-ln{font-size:15px;font-weight:700;color:#fff}.sb-lt{font-size:9.5px;color:rgba(255,255,255,.35);margin-top:1px;letter-spacing:.03em;text-transform:uppercase}
+.sb-nav{padding:10px 0;flex:1}
+.sb-g{font-size:9px;font-weight:700;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:.1em;padding:12px 18px 4px}
+.sb-a{display:flex;align-items:center;gap:9px;padding:9px 18px;font-size:13px;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;border-left:2px solid transparent;transition:all .12s}
+.sb-a svg{width:15px;height:15px;flex-shrink:0;opacity:.75}
+.sb-a:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
+.sb-a.on{color:#fff;background:rgba(255,255,255,.1);border-left-color:#C9A84C;font-weight:600}
+.sb-ft{padding:13px 18px;border-top:1px solid rgba(255,255,255,.08)}
+.sb-u{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;transition:background .12s;margin-bottom:8px}
+.sb-u:hover{background:rgba(255,255,255,.07)}
+.sb-av{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-un{font-size:12px;font-weight:600;color:rgba(255,255,255,.85)}.sb-ur{font-size:10.5px;color:rgba(255,255,255,.38)}
+.sb-lo{display:flex;align-items:center;gap:6px;font-size:11.5px;color:rgba(255,255,255,.32);cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
+.sb-lo svg{width:13px;height:13px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{background:#fff;border-bottom:1px solid #E8E5DE;padding:13px 24px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.bk{width:30px;height:30px;border:1.5px solid #E5E7EB;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#9CA3AF;transition:all .1s;flex-shrink:0}
+.bk:hover{background:#F8F6F1;color:#111}
+.tb-t{font-size:14px;font-weight:700;color:#111}.tb-s{font-size:11.5px;color:#9CA3AF;margin-top:1px}
+.cnt{padding:24px;overflow-y:auto;flex:1}
+.inner{max-width:600px;margin:0 auto}
+.stepper{display:flex;align-items:flex-start;margin-bottom:26px}
+.step{display:flex;flex-direction:column;align-items:center;flex:1}.step:last-child{flex:none}
+.sc{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;transition:all .2s}
+.sc.done{background:#059669;color:#fff}.sc.active{background:#1B2D4F;color:#fff;box-shadow:0 0 0 4px rgba(27,45,79,.15)}.sc.todo{background:#E5E7EB;color:#9CA3AF}
+.sl2{font-size:10.5px;font-weight:600;margin-top:5px;white-space:nowrap}
+.sl2.active{color:#1B2D4F}.sl2.done{color:#059669}.sl2.todo{color:#9CA3AF}
+.sline{flex:1;height:1.5px;margin:14px 4px 0;transition:background .2s}
+.sline.done{background:#059669}.sline.todo{background:#E5E7EB}
+.card{background:#fff;border:1px solid #EDEBE4;border-radius:14px;padding:22px;margin-bottom:12px}
+.card-t{font-size:15px;font-weight:700;color:#111;margin-bottom:4px}.card-s{font-size:13px;color:#9CA3AF;margin-bottom:16px}
+.field{margin-bottom:13px}.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:11px;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+input[type=text],input[type=number]{width:100%;padding:10px 12px;border:1.5px solid #E5E7EB;border-radius:9px;background:#FAFAF9;font-size:13px;font-family:inherit;color:#111;outline:none;transition:border .15s;-webkit-appearance:none}
+input:focus{border-color:#1B2D4F;box-shadow:0 0 0 3px rgba(27,45,79,.1);background:#fff}
+.em{font-size:11.5px;color:#DC2626;margin-top:4px;display:none}.em.on{display:block}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.ro{border:1.5px solid #E5E7EB;border-radius:10px;padding:11px 12px;cursor:pointer;transition:all .15s;display:flex;align-items:flex-start;gap:9px}
+.ro:hover{border-color:#9CA3AF;background:#FAFAF9}.ro.sel{border-color:#1B2D4F;background:#EEF2F9}
+.ro input{margin-top:2px;accent-color:#1B2D4F;flex-shrink:0}
+.ro-l{font-size:13px;font-weight:600;color:#111}.ro-s{font-size:11px;color:#9CA3AF;margin-top:1px}
+.dz{border:2px dashed #D1CDC4;border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.dz:hover,.dz.drag{border-color:#1B2D4F;background:#EEF2F9}
+.dz input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dz-i{width:42px;height:42px;background:#F0EEE9;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+.dz-t{font-size:13px;font-weight:600;color:#374151}.dz-s{font-size:12px;color:#9CA3AF;margin-top:3px}
+.pw{position:relative;margin-top:12px}
+.pw img{width:100%;border-radius:10px;border:1px solid #EDEBE4;max-height:200px;object-fit:contain;background:#F8F6F1;display:block}
+.rm{position:absolute;top:7px;right:7px;width:26px;height:26px;background:#fff;border:1px solid #EDEBE4;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.quality-warn{background:#FFFBEB;border:1px solid #FDE68A;border-radius:9px;padding:10px 13px;margin-top:10px;display:none;font-size:12px;color:#92400E;line-height:1.5}
+.quality-warn.on{display:block}
+.ci{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px;cursor:pointer}
+.ci:last-child{margin-bottom:0}
+.cb{width:20px;height:20px;border:1.5px solid #D1D5DB;border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all .15s}
+.cb.on{background:#1B2D4F;border-color:#1B2D4F}
+.ct{font-size:13px;color:#374151;line-height:1.55}
+.law{background:#F8F6F1;border:1px solid #EDEBE4;border-radius:9px;padding:11px;font-size:11.5px;color:#374151;line-height:1.65;max-height:120px;overflow-y:auto;margin-bottom:12px}
+.sr2{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid #F5F2EC}
+.sr2:last-child{border-bottom:none}
+.notice{background:#EEF2F9;border:1px solid #C3CFE2;border-radius:9px;padding:9px 12px;margin-top:10px;display:flex;gap:7px}
+.notice svg{flex-shrink:0;color:#1B2D4F;margin-top:1px;width:13px;height:13px}
+.notice p{font-size:12px;color:#1B2D4F;line-height:1.5}
+.kvkk{background:#FFFBEB;border:1px solid #FDE68A;border-radius:9px;padding:9px 12px;margin-top:10px;display:flex;gap:7px}
+.kvkk svg{flex-shrink:0;color:#D97706;margin-top:1px;width:13px;height:13px}
+.kvkk p{font-size:12px;color:#92400E;line-height:1.5}
+.ai-box{background:#fff;border:1px solid #EDEBE4;border-radius:14px;padding:36px 24px;text-align:center;margin-bottom:12px}
+.ai-spin{width:52px;height:52px;margin:0 auto 16px;border:3px solid #E5E7EB;border-top-color:#1B2D4F;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ai-title{font-size:15px;font-weight:700;color:#111;margin-bottom:6px}
+.ai-text{font-size:13px;color:#9CA3AF;line-height:1.6;max-width:340px;margin:0 auto}
+.ai-step{font-size:12px;color:#6B7280;margin-top:12px;padding:8px 16px;background:#F8F6F1;border-radius:8px;display:inline-block}
+.error-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:14px;padding:20px;text-align:center;margin-bottom:12px}
+.error-title{font-size:14px;font-weight:700;color:#DC2626;margin-bottom:6px}
+.error-text{font-size:13px;color:#991B1B;line-height:1.5}
+.btn-retry{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 16px;background:#1B2D4F;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+.bn{display:flex;justify-content:space-between;margin-top:14px}
+.btn-b{display:flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid #E5E7EB;background:transparent;border-radius:9px;font-size:13px;font-weight:600;color:#6B7280;cursor:pointer;font-family:inherit;transition:all .12s}
+.btn-b:hover{background:#F8F6F1}
+.btn-b:disabled{opacity:.3;cursor:not-allowed}
+.btn-f{display:flex;align-items:center;gap:6px;padding:9px 18px;background:#1B2D4F;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .15s}
+.btn-f:hover{background:#253F6B}
+.btn-sub{width:100%;padding:12px;background:#1B2D4F;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px}
+.btn-sub:hover{background:#253F6B}
+.btn-sub:disabled{opacity:.5;cursor:not-allowed}
+.sp{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
+</style>
+</head>
+<body>
+
+<aside class="sb">
+  <div class="sb-top"><a href="dashboard.html" class="sb-logo"><svg width="32" height="32" viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="rgba(255,255,255,.12)"/><g transform="translate(3,4)"><rect x="1" y="10" width="9" height="8" rx="1" stroke="#C9A84C" stroke-width="1.2" fill="none"/><polygon points="5.5,6 1,10 10,10" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-linejoin="round"/><line x1="4" y1="15" x2="4" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="15" x2="7" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><path d="M14 14 Q15 11 17 13 Q18 9 20 12 Q22 10 22 14 Q22 17 18 18 Q14 17 14 14Z" stroke="#C9A84C" stroke-width="1.1" fill="none"/><circle cx="24" cy="8" r="2.2" stroke="#C9A84C" stroke-width="1.2" fill="none"/><line x1="24" y1="10.2" x2="24" y2="15" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><line x1="21.5" y1="12" x2="26.5" y2="12" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><line x1="24" y1="15" x2="22" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><line x1="24" y1="15" x2="26" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/></g></svg><div><div class="sb-ln">PsycoAI</div><div class="sb-lt">HTP Analiz</div></div></a></div>
+  <nav class="sb-nav">
+    <div class="sb-g">Genel</div>
+    <a href="dashboard.html" class="sb-a"><svg viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>Ana Sayfa</a>
+    <a href="new.html" class="sb-a on"><svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2v9M5 6l2.5-4L10 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11v1a2 2 0 002 2h7a2 2 0 002-2v-1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Yeni Analiz</a>
+    <div class="sb-g">Veri</div>
+    <a href="archive.html" class="sb-a"><svg viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 6h13" stroke="currentColor" stroke-width="1.2"/><rect x="4" y="8.5" width="7" height="1.5" rx=".75" fill="currentColor" opacity=".4"/></svg>Geçmiş Kayıtlar</a>
+  </nav>
+  <div class="sb-ft">
+    <a href="profile.html" class="sb-u"><div class="sb-av" id="avEl">?</div><div><div class="sb-un" id="nmEl">—</div><div class="sb-ur" id="rlEl">—</div></div></a>
+    <button class="sb-lo" onclick="logout()"><svg viewBox="0 0 13 13" fill="none"><path d="M5 2H2v9h3M9 9l3-2.5L9 4M13 6.5H5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Çıkış Yap</button>
+  </div>
+</aside>
+
+<div class="main">
+  <div class="topbar">
+    <a href="dashboard.html" class="bk"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+    <div><div class="tb-t">Yeni Analiz</div><div class="tb-s">Qwen2.5-VL ile HTP analizi</div></div>
+  </div>
+  <div class="cnt">
+    <div class="inner">
+
+      <div id="aiBox" style="display:none">
+        <div class="ai-box">
+          <div class="ai-spin"></div>
+          <div class="ai-title">Qwen2.5-VL Görsel Analiz Ediyor</div>
+          <div class="ai-text">Çizim 200+ HTP göstergesine göre akademik literatür karşılaştırmasıyla analiz edilmektedir. Bu işlem 15–45 saniye sürebilir.</div>
+          <div class="ai-step" id="aiStep">Görsel işleniyor...</div>
+        </div>
+      </div>
+
+      <div id="errBox" style="display:none">
+        <div class="error-box">
+          <div class="error-title">Analiz Başarısız</div>
+          <div class="error-text" id="errText">Beklenmedik bir hata oluştu.</div>
+          <button class="btn-retry" onclick="resetForm()">Tekrar Dene</button>
+        </div>
+      </div>
+
+      <div id="formArea">
+        <div class="stepper" id="stepper"></div>
+
+        <div id="s0">
+          <div class="card">
+            <div class="card-t">Çocuk Bilgileri</div>
+            <div class="card-s">Lütfen çocuğun adını ve soyadını girin.</div>
+            <div class="row2" style="margin-bottom:13px">
+              <div class="field" style="margin-bottom:0"><label>Ad</label><input type="text" id="fn" placeholder="Çocuğun adı"><div class="em" id="fnE">Ad zorunludur.</div></div>
+              <div class="field" style="margin-bottom:0"><label>Soyad</label><input type="text" id="ln" placeholder="Çocuğun soyadı"><div class="em" id="lnE">Soyad zorunludur.</div></div>
+            </div>
+            <div class="field" style="max-width:140px;margin-bottom:14px"><label>Yaş</label><input type="number" id="age" min="3" max="18" placeholder="8"><div class="em" id="ageE">3–18 arası girin.</div></div>
+            <div class="field" style="margin-bottom:0"><label>Çizim Türü</label>
+              <div class="rg" id="dtypes">
+                <label class="ro sel" onclick="st(this,'htp_full')"><input type="radio" name="dt" value="htp_full" checked><div><div class="ro-l">Ev + Ağaç + İnsan</div><div class="ro-s">Tam HTP (önerilen)</div></div></label>
+                <label class="ro" onclick="st(this,'house')"><input type="radio" name="dt" value="house"><div><div class="ro-l">Sadece Ev</div><div class="ro-s">Aile dinamikleri</div></div></label>
+                <label class="ro" onclick="st(this,'tree')"><input type="radio" name="dt" value="tree"><div><div class="ro-l">Sadece Ağaç</div><div class="ro-s">Benlik ve gelişim</div></div></label>
+                <label class="ro" onclick="st(this,'person')"><input type="radio" name="dt" value="person"><div><div class="ro-l">Sadece İnsan</div><div class="ro-s">Sosyal ilişkiler</div></div></label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="s1" style="display:none">
+          <div class="card">
+            <div class="card-t">Çizimi Yükle</div>
+            <div class="card-s">JPG, PNG veya WebP · Maks. 10 MB</div>
+            <div class="dz" id="dz" ondragover="event.preventDefault();this.classList.add('drag')" ondragleave="this.classList.remove('drag')" ondrop="hDrop(event)">
+              <input type="file" id="fi" accept="image/jpeg,image/png,image/webp" onchange="hFile(this.files[0])">
+              <div class="dz-i"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3v12M7 7l4-4 4 4" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 17v1a3 3 0 003 3h10a3 3 0 003-3v-1" stroke="#9CA3AF" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+              <div class="dz-t">Çizimi buraya sürükleyin veya tıklayın</div>
+              <div class="dz-s">Net ve iyi aydınlatılmış görsel daha iyi analiz sağlar</div>
+            </div>
+            <div class="pw" id="pw" style="display:none">
+              <img id="pi" src="" alt="Önizleme">
+              <button class="rm" onclick="rFile()"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 2l7 7M9 2l-7 7" stroke="#DC2626" stroke-width="1.4" stroke-linecap="round"/></svg></button>
+            </div>
+            <div class="quality-warn" id="qualityWarn">⚠️ <strong>Görüntü çok küçük veya düşük çözünürlüklü.</strong> Daha net ve iyi aydınlatılmış bir ortamda tekrar fotoğraflayın. Bulanık görseller analiz kalitesini düşürür.</div>
+            <div class="kvkk" style="margin-top:12px"><svg viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.1"/><path d="M6.5 4.5v2.5M6.5 8.5v.3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><p>Yüklenen görsel yalnızca bu analiz için Qwen2.5-VL ile işlenir. KVKK kapsamında korunmaktadır.</p></div>
+          </div>
+        </div>
+
+        <div id="s2" style="display:none">
+          <div class="card">
+            <div class="card-t">KVKK Onayı</div>
+            <div class="law"><strong>Kişisel Verilerin İşlenmesi Hakkında Aydınlatma</strong><br><br>Bu sistem aracılığıyla işlenen veriler, 6698 sayılı KVKK kapsamında <strong>özel nitelikli kişisel veri</strong> statüsündedir. Çocuğa ait çizim ve demografik bilgiler yalnızca psikolojik değerlendirme desteği amacıyla işlenmektedir. Veriler PostgreSQL veritabanında şifrelenmiş biçimde saklanmakta, üçüncü taraflarla paylaşılmamaktadır. Bu sistem <strong>karar destek aracıdır</strong>; tanı yetkisi yalnızca uzmana aittir.</div>
+            <div class="ci" onclick="tC('c1')"><div class="cb" id="c1"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ct">KVKK kapsamında kişisel verilerin işlenmesine onay veriyorum. Bu işlem için veli/vasi rızası alınmıştır.</div></div>
+            <div class="ci" onclick="tC('c2')"><div class="cb" id="c2"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="ct">Bu sistemin bir <strong>karar destek aracı</strong> olduğunu ve nihai değerlendirmenin uzman tarafından yapılacağını anlıyorum.</div></div>
+          </div>
+        </div>
+
+        <div id="s3" style="display:none">
+          <div class="card">
+            <div class="card-t">Özet ve Gönder</div>
+            <div id="sumRows" style="margin-bottom:12px"></div>
+            <div id="imgPrev" style="margin-bottom:12px;display:none"><img id="imgPrevEl" src="" style="width:100%;height:85px;object-fit:contain;border-radius:9px;border:1px solid #EDEBE4;background:#F8F6F1"></div>
+            <div class="notice"><svg viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.1"/><path d="M6.5 4.5v2.5M6.5 8.5v.3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><p><strong>Qwen2.5-VL</strong> görselini okuyarak 200+ HTP göstergesine göre <strong>gerçek analiz</strong> üretecektir. İşlem 15–45 saniye sürebilir.</p></div>
+            <button class="btn-sub" id="subBtn" onclick="doSubmit()">
+              <div class="sp" id="sp"></div>
+              <span id="subTxt">Analizi Başlat</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="bn">
+          <button class="btn-b" id="bkBtn" onclick="go(-1)" disabled>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Geri
+          </button>
+          <button class="btn-f" id="fwBtn" onclick="go(1)">
+            İleri<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+var API_BASE = "http://localhost:8000";
+
+function getToken(){return localStorage.getItem("psy_token");}
+function getUser(){return JSON.parse(localStorage.getItem("psy_user")||"null");}
+function authHeaders(){return{"Authorization":"Bearer "+getToken(),"Content-Type":"application/json"};}
+function logout(){localStorage.removeItem("psy_token");localStorage.removeItem("psy_user");window.location.href="areas/identity/login.html";}
+
+var cur=0,fd=null,fdu=null,c1=false,c2=false,stype="htp_full";
+var STEPS=["Çocuk Bilgileri","Çizimi Yükle","KVKK Onayı","Gönder"];
+var TL={htp_full:"Ev + Ağaç + İnsan",house:"Sadece Ev",tree:"Sadece Ağaç",person:"Sadece İnsan"};
+
+function renS(){
+  var h="";
+  for(var i=0;i<STEPS.length;i++){
+    var cls=i<cur?"done":i===cur?"active":"todo";
+    var ic=i<cur?"<svg width='12' height='10' viewBox='0 0 12 10' fill='none'><path d='M1 5l4 4 6-8' stroke='currentColor' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>":(i+1);
+    h+="<div class='step'><div class='sc "+cls+"'>"+ic+"</div><div class='sl2 "+cls+"'>"+STEPS[i]+"</div></div>";
+    if(i<STEPS.length-1)h+="<div class='sline "+(i<cur?"done":"todo")+"'></div>";
+  }
+  document.getElementById("stepper").innerHTML=h;
+}
+function show(n){
+  for(var i=0;i<4;i++){var el=document.getElementById("s"+i);if(el)el.style.display=i===n?"block":"none";}
+  document.getElementById("bkBtn").disabled=n===0;
+  document.getElementById("fwBtn").style.display=n===3?"none":"flex";
+  renS();
+}
+function go(d){
+  if(d===1){
+    document.querySelectorAll(".em").forEach(function(e){e.classList.remove("on");});
+    if(cur===0){
+      var fn=document.getElementById("fn").value.trim();
+      var ln=document.getElementById("ln").value.trim();
+      var ag=parseInt(document.getElementById("age").value);
+      var ok=true;
+      if(!fn){document.getElementById("fnE").classList.add("on");ok=false;}
+      if(!ln){document.getElementById("lnE").classList.add("on");ok=false;}
+      if(!ag||ag<3||ag>18){document.getElementById("ageE").classList.add("on");ok=false;}
+      if(!ok)return;
+    }
+    if(cur===1&&!fd){alert("Lütfen bir çizim yükleyin.");return;}
+    if(cur===2&&(!c1||!c2)){alert("Lütfen her iki onayı da işaretleyin.");return;}
+    if(cur===2)buildSum();
+  }
+  cur=Math.max(0,Math.min(3,cur+d));show(cur);
+}
+function st(el,v){document.querySelectorAll(".ro").forEach(function(o){o.classList.remove("sel");});el.classList.add("sel");stype=v;}
+function hFile(f){
+  if(!f)return;
+  if(f.size>10*1024*1024){alert("Dosya 10 MB'dan büyük.");return;}
+  fd=f;
+  var r=new FileReader();
+  r.onload=function(e){
+    fdu=e.target.result;
+    var img=new Image();
+    img.onload=function(){
+      document.getElementById("qualityWarn").classList[img.width<150||img.height<150?"add":"remove"]("on");
+    };
+    img.src=fdu;
+    document.getElementById("pi").src=fdu;
+    document.getElementById("pw").style.display="block";
+    document.getElementById("dz").style.display="none";
+  };
+  r.readAsDataURL(f);
+}
+function hDrop(e){e.preventDefault();document.getElementById("dz").classList.remove("drag");var f=e.dataTransfer.files[0];if(f&&f.type.startsWith("image/"))hFile(f);}
+function rFile(){fd=null;fdu=null;document.getElementById("pw").style.display="none";document.getElementById("dz").style.display="block";document.getElementById("fi").value="";document.getElementById("qualityWarn").classList.remove("on");}
+function tC(id){var on=id==="c1"?!c1:!c2;if(id==="c1")c1=on;else c2=on;var el=document.getElementById(id);on?el.classList.add("on"):el.classList.remove("on");}
+function buildSum(){
+  var fn=document.getElementById("fn").value.trim();
+  var ln=document.getElementById("ln").value.trim();
+  var ag=document.getElementById("age").value;
+  var rows=[["Ad Soyad",fn+" "+ln],["Yaş",ag+" yaş"],["Çizim Türü",TL[stype]]];
+  var h="";
+  rows.forEach(function(r){h+="<div class='sr2'><span style='font-size:12px;color:#9CA3AF;font-weight:500'>"+r[0]+"</span><span style='font-size:12px;font-weight:600;color:#111'>"+r[1]+"</span></div>";});
+  document.getElementById("sumRows").innerHTML=h;
+  if(fdu){document.getElementById("imgPrevEl").src=fdu;document.getElementById("imgPrev").style.display="block";}
+}
+function resetForm(){
+  document.getElementById("errBox").style.display="none";
+  document.getElementById("formArea").style.display="block";
+}
+
+var stepMessages=["Görsel Qwen2.5-VL'e gönderiliyor...","Çizim unsurları tespit ediliyor...","200+ HTP göstergesiyle karşılaştırılıyor...","Akademik kaynaklar eşleştiriliyor...","Bulgular yapılandırılıyor...","Rapor oluşturuluyor..."];
+function animateSteps(){
+  var i=0;
+  return setInterval(function(){
+    document.getElementById("aiStep").textContent=stepMessages[i%stepMessages.length];
+    i++;
+  },3500);
+}
+
+async function doSubmit(){
+  if(!getToken()){logout();return;}
+  var fn=document.getElementById("fn").value.trim();
+  var ln=document.getElementById("ln").value.trim();
+  var ag=parseInt(document.getElementById("age").value);
+
+  document.getElementById("formArea").style.display="none";
+  document.getElementById("aiBox").style.display="block";
+  var timer=animateSteps();
+
+  try{
+    var res=await fetch(API_BASE+"/api/analyses",{
+      method:"POST",
+      headers:authHeaders(),
+      body:JSON.stringify({
+        child_first:fn,
+        child_last:ln,
+        child_age:ag,
+        drawing_type:stype,
+        drawing_label:TL[stype],
+        image_data:fdu
+      })
+    });
+    clearInterval(timer);
+
+    if(res.status===401){logout();return;}
+
+    var data=await res.json();
+    if(!res.ok){throw new Error(data.detail||"Analiz başarısız.");}
+
+    document.getElementById("aiBox").style.display="none";
+    window.location.href="detail.html?id="+data.id;
+
+  }catch(err){
+    clearInterval(timer);
+    document.getElementById("aiBox").style.display="none";
+    document.getElementById("errBox").style.display="block";
+    document.getElementById("errText").textContent=err.message;
+  }
+}
+
+(function(){
+  if(!getToken()){logout();return;}
+  var u=getUser();
+  if(u){
+    document.getElementById("avEl").textContent=u.initials||"?";
+    document.getElementById("nmEl").textContent=u.name||"—";
+    document.getElementById("rlEl").textContent=u.roleLabel||"—";
+  }
+  show(0);
+})();
+</script>
+</body>
+</html>
