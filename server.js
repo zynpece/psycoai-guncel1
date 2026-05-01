@@ -108,6 +108,7 @@ app.post('/api/auth/register', async (req, res) => {
       values
     );
 
+
     const user = { ...result.rows[0] };
     delete user.password;
 
