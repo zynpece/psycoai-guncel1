@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PsycoAI — Kayıt Ol</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F0EEE9;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem}
+.page{width:100%;max-width:480px}
+.logo-row{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:1.75rem}
+.logo-name{font-size:22px;font-weight:700;color:#1B2D4F;letter-spacing:-.03em;line-height:1}
+.logo-sub{font-size:11px;color:#9CA3AF;margin-top:2px;letter-spacing:.02em}
+.card{background:#fff;border-radius:16px;box-shadow:0 2px 20px rgba(0,0,0,.08);padding:2rem}
+.card h1{font-size:17px;font-weight:700;color:#111;margin-bottom:4px}
+.card p{font-size:13px;color:#6B7280;margin-bottom:1.5rem;line-height:1.5}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:11px;font-weight:600;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px}
+.field label .opt{font-weight:400;color:#9CA3AF;text-transform:none;letter-spacing:0;font-size:10.5px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+input,select{width:100%;padding:9px 12px;border:1.5px solid #E5E7EB;border-radius:9px;background:#FAFAF9;font-size:13px;font-family:inherit;color:#111;outline:none;transition:border .15s,box-shadow .15s;-webkit-appearance:none;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+input:focus,select:focus{border-color:#1B2D4F;box-shadow:0 0 0 3px rgba(27,45,79,.1);background:#fff}
+.pw-w{position:relative}
+.pw-w input{padding-right:40px}
+.eye{position:absolute;right:11px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#9CA3AF;display:flex;padding:2px}
+.err{font-size:11.5px;color:#DC2626;margin-top:4px;display:none}
+.err.on{display:block}
+#otherWrap{display:none}
+.str-t{height:3px;background:#E5E7EB;border-radius:2px;margin-top:5px;overflow:hidden}
+.str-f{height:100%;border-radius:2px;width:0;transition:width .25s,background .25s}
+.str-l{font-size:11px;margin-top:3px}
+.btn{width:100%;padding:11px;background:#1B2D4F;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s;margin-top:4px}
+.btn:hover{background:#253F6B}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.sp{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.link-row{text-align:center;margin-top:1rem;font-size:13px;color:#6B7280}
+.link-row a{color:#1B2D4F;font-weight:600;text-decoration:none}
+.alert{font-size:13px;color:#DC2626;padding:9px 11px;background:#FEF2F2;border:1px solid #FECACA;border-radius:9px;margin-bottom:12px;display:none}
+.notice{margin-top:12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:10px 13px;display:flex;gap:8px}
+.notice svg{flex-shrink:0;color:#D97706;margin-top:1px;width:14px;height:14px}
+.notice p{font-size:11.5px;color:#92400E;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="logo-row">
+    <svg width="42" height="42" viewBox="0 0 34 34" fill="none">
+      <rect width="34" height="34" rx="9" fill="#1B2D4F"/>
+      <g transform="translate(3,4)">
+        <rect x="1" y="10" width="9" height="8" rx="1" stroke="#C9A84C" stroke-width="1.2" fill="none"/>
+        <polygon points="5.5,6 1,10 10,10" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+        <line x1="4" y1="15" x2="4" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="7" y1="15" x2="7" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M14 14 Q15 11 17 13 Q18 9 20 12 Q22 10 22 14 Q22 17 18 18 Q14 17 14 14Z" stroke="#C9A84C" stroke-width="1.1" fill="none"/>
+        <circle cx="24" cy="8" r="2.2" stroke="#C9A84C" stroke-width="1.2" fill="none"/>
+        <line x1="24" y1="10.2" x2="24" y2="15" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="21.5" y1="12" x2="26.5" y2="12" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="24" y1="15" x2="22" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/>
+        <line x1="24" y1="15" x2="26" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/>
+      </g>
+    </svg>
+    <div><div class="logo-name">PsycoAI</div><div class="logo-sub">HTP PROJEKTİF ÇİZİM ANALİZ SİSTEMİ</div></div>
+  </div>
+
+  <div class="card">
+    <h1>Hesap oluşturun</h1>
+    <p>Bu sistemin ruh sağlığı ve eğitim alanında çalışan uzmanlar tarafından kullanımı tavsiye edilir.</p>
+    <div class="alert" id="alertBox"></div>
+    <form id="form" novalidate>
+      <div class="field">
+        <label>Ad Soyad</label>
+        <input type="text" id="name" placeholder="Adınız Soyadınız" autocomplete="name">
+        <div class="err" id="nameErr">Ad soyad zorunludur.</div>
+      </div>
+      <div class="field">
+        <label>E-posta</label>
+        <input type="email" id="email" placeholder="ornek@kurum.edu.tr" autocomplete="email">
+        <div class="err" id="emailErr">Geçerli bir e-posta girin.</div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Şifre</label>
+          <div class="pw-w">
+            <input type="password" id="pwd" placeholder="En az 8 karakter" autocomplete="new-password">
+            <button type="button" class="eye" onclick="tog('pwd')">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+          </div>
+          <div class="str-t"><div class="str-f" id="sf"></div></div>
+          <div class="str-l" id="sl"></div>
+          <div class="err" id="pwdErr">En az 8 karakter.</div>
+        </div>
+        <div class="field">
+          <label>Şifre Tekrar</label>
+          <div class="pw-w">
+            <input type="password" id="pwd2" placeholder="Tekrar girin" autocomplete="new-password">
+            <button type="button" class="eye" onclick="tog('pwd2')">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+          </div>
+          <div class="err" id="pwd2Err">Şifreler eşleşmiyor.</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Unvan / Meslek</label>
+        <select id="role" onchange="rc(this.value)">
+          <option value="">— Seçiniz —</option>
+          <option value="counselor">Psikolojik Danışman (PDR)</option>
+          <option value="psychologist">Psikolog</option>
+          <option value="pedagogue">Pedagog</option>
+          <option value="guidance_teacher">Okul Rehber Öğretmeni</option>
+          <option value="researcher">Araştırmacı / Akademisyen</option>
+          <option value="other">Diğer</option>
+        </select>
+        <div class="err" id="roleErr">Lütfen unvanınızı seçin.</div>
+      </div>
+      <div class="field" id="otherWrap">
+        <label>Unvanınızı belirtiniz</label>
+        <input type="text" id="otherRole" placeholder="Örn: Özel Eğitim Uzmanı">
+        <div class="err" id="otherErr">Lütfen yazın.</div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Kurum / Okul <span class="opt">(isteğe bağlı)</span></label>
+          <input type="text" id="inst" placeholder="Kurum adı">
+        </div>
+        <div class="field">
+          <label>Şehir <span class="opt">(isteğe bağlı)</span></label>
+          <input type="text" id="city" placeholder="İstanbul">
+        </div>
+      </div>
+      <button type="submit" class="btn" id="btn">
+        <div class="sp" id="sp"></div>
+        <span id="bt">Hesap Oluştur</span>
+      </button>
+    </form>
+    <div class="link-row">Hesabınız var mı? <a href="01_login.html" onclick="localStorage.removeItem('psy_token');localStorage.removeItem('psy_user')">Giriş yapın</a></div>
+  </div>
+  <div class="notice">
+    <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 5v2.5M7 9.2v.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <p>Hesap oluşturarak kişisel verilerinizin KVKK kapsamında işlenmesini kabul edersiniz.</p>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   API_BASE — kendi domain'inle değiştir
+   Örn: "https://api.psycoai.com"
+   ═══════════════════════════════════════════════════════ */
+var API_BASE = "http://localhost:5000";
+
+var ROLES={counselor:"Psikolojik Danışman",psychologist:"Psikolog",pedagogue:"Pedagog",guidance_teacher:"Okul Rehber Öğretmeni",researcher:"Araştırmacı / Akademisyen"};
+function tog(id){var i=document.getElementById(id);i.type=i.type==="password"?"text":"password";}
+function rc(v){document.getElementById("otherWrap").style.display=v==="other"?"block":"none";}
+
+document.getElementById("pwd").addEventListener("input",function(){
+  var v=this.value,s=0;
+  if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  var c=["#DC2626","#D97706","#059669","#0B7C6C"],l=["Çok zayıf","Zayıf","İyi","Güçlü"];
+  var f=document.getElementById("sf"),t=document.getElementById("sl");
+  if(!v.length){f.style.width="0";t.textContent="";return;}
+  f.style.width=(s*25)+"%";f.style.background=c[s-1]||c[0];
+  t.textContent=l[s-1]||l[0];t.style.color=c[s-1]||c[0];
+});
+
+document.getElementById("form").addEventListener("submit",async function(e){
+  e.preventDefault();
+  document.querySelectorAll(".err").forEach(function(el){el.classList.remove("on");});
+  document.getElementById("alertBox").style.display="none";
+  var n=document.getElementById("name").value.trim();
+  var em=document.getElementById("email").value.trim().toLowerCase();
+  var p=document.getElementById("pwd").value;
+  var p2=document.getElementById("pwd2").value;
+  var r=document.getElementById("role").value;
+  var ot=document.getElementById("otherRole").value.trim();
+  var ok=true;
+  if(!n){document.getElementById("nameErr").classList.add("on");ok=false;}
+  if(!em||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){document.getElementById("emailErr").classList.add("on");ok=false;}
+  if(p.length<8){document.getElementById("pwdErr").classList.add("on");ok=false;}
+  if(p!==p2){document.getElementById("pwd2Err").classList.add("on");ok=false;}
+  if(!r){document.getElementById("roleErr").classList.add("on");ok=false;}
+  if(r==="other"&&!ot){document.getElementById("otherErr").classList.add("on");ok=false;}
+  if(!ok)return;
+  var rl=r==="other"?ot:(ROLES[r]||r);
+  var ini=n.split(" ").map(function(x){return x[0];}).join("").toUpperCase().slice(0,2);
+  var btn=document.getElementById("btn");
+  document.getElementById("sp").style.display="block";
+  document.getElementById("bt").textContent="Hesap oluşturuluyor...";
+  btn.disabled=true;
+  try{
+    var res=await fetch(API_BASE+"/api/auth/register",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        name:n,email:em,password:p,
+        role:r,role_label:rl,
+        institution:document.getElementById("inst").value.trim()||null,
+        city:document.getElementById("city").value.trim()||null,
+        initials:ini
+      })
+    });
+    var data=await res.json();
+    if(!res.ok){throw new Error(data.detail||"Kayıt başarısız.");}
+    // Token kaydet
+    localStorage.removeItem("psy_token");
+    localStorage.removeItem("psy_user");
+    window.location.href="01_login.html?registered=1";
+  }catch(err){
+    document.getElementById("sp").style.display="none";
+    btn.disabled=false;
+    document.getElementById("bt").textContent="Hesap Oluştur";
+    var al=document.getElementById("alertBox");
+    al.textContent=err.message;al.style.display="block";
+  }
+});
+</script>
+</body>
+</html>
