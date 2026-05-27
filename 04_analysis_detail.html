@@ -1,356 +1,1383 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="tr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PsycoAI — Analiz Raporu</title>
-<style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F0EEE9;display:flex;min-height:100vh;color:#111}
-.sb{width:220px;background:#1B2D4F;display:flex;flex-direction:column;min-height:100vh;flex-shrink:0}
-.sb-top{padding:18px 18px 15px;border-bottom:1px solid rgba(255,255,255,.08)}
-.sb-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.sb-ln{font-size:15px;font-weight:700;color:#fff}.sb-lt{font-size:9.5px;color:rgba(255,255,255,.35);margin-top:1px;letter-spacing:.03em;text-transform:uppercase}
-.sb-nav{padding:10px 0;flex:1}
-.sb-g{font-size:9px;font-weight:700;color:rgba(255,255,255,.22);text-transform:uppercase;letter-spacing:.1em;padding:12px 18px 4px}
-.sb-a{display:flex;align-items:center;gap:9px;padding:9px 18px;font-size:13px;font-weight:500;color:rgba(255,255,255,.55);text-decoration:none;border-left:2px solid transparent;transition:all .12s}
-.sb-a svg{width:15px;height:15px;flex-shrink:0;opacity:.75}
-.sb-a:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.9)}
-.sb-a.on{color:#fff;background:rgba(255,255,255,.1);border-left-color:#C9A84C;font-weight:600}
-.sb-ft{padding:13px 18px;border-top:1px solid rgba(255,255,255,.08)}
-.sb-u{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;text-decoration:none;transition:background .12s;margin-bottom:8px}
-.sb-u:hover{background:rgba(255,255,255,.07)}
-.sb-av{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
-.sb-un{font-size:12px;font-weight:600;color:rgba(255,255,255,.85)}.sb-ur{font-size:10.5px;color:rgba(255,255,255,.38)}
-.sb-lo{display:flex;align-items:center;gap:6px;font-size:11.5px;color:rgba(255,255,255,.32);cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
-.sb-lo svg{width:13px;height:13px}
-.main{flex:1;min-width:0;display:flex;flex-direction:column}
-.topbar{background:#fff;border-bottom:1px solid #E8E5DE;padding:13px 24px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.tl{display:flex;align-items:center;gap:12px}
-.bk{width:30px;height:30px;border:1.5px solid #E5E7EB;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:#9CA3AF;transition:all .1s;flex-shrink:0}
-.bk:hover{background:#F8F6F1;color:#111}
-.tt{font-size:14px;font-weight:700;color:#111}.ts{font-size:11.5px;color:#9CA3AF;margin-top:1px}
-.btn-p{display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid #E5E7EB;background:#fff;border-radius:9px;font-size:13px;font-weight:600;color:#374151;cursor:pointer;font-family:inherit;transition:all .15s}
-.btn-p:hover{background:#1B2D4F;color:#fff;border-color:#1B2D4F}
-.cnt{padding:20px 24px;overflow-y:auto;flex:1}
-.ly2{display:flex;gap:16px;align-items:flex-start}
-.lp{width:220px;flex-shrink:0}.rp{flex:1;min-width:0}
-.db{background:#fff;border:1px solid #EDEBE4;border-radius:14px;padding:14px;margin-bottom:12px}
-.dbt{font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
-.di{width:100%;border-radius:9px;border:1px solid #EDEBE4;background:#F8F6F1;min-height:140px;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.di img{width:100%;height:auto;display:block}
-.ib{background:#fff;border:1px solid #EDEBE4;border-radius:14px;padding:14px;margin-bottom:12px}
-.ibt{font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
-.ir{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-bottom:1px solid #F5F2EC;font-size:12px;gap:8px}
-.ir:last-child{border-bottom:none}
-.ik{color:#9CA3AF;font-weight:500;flex-shrink:0}.iv{color:#111;font-weight:600;text-align:right;word-break:break-word}
-.meta{background:#F8F6F1;border:1px solid #EDEBE4;border-radius:12px;padding:13px;margin-bottom:12px}
-.meta-t{font-size:12px;font-weight:700;color:#374151;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.meta-g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:7px}
-.meta-c{text-align:center;background:#fff;border-radius:8px;padding:9px 5px;border:1px solid #EDEBE4}
-.meta-n{font-size:17px;font-weight:700}.meta-l{font-size:10px;color:#9CA3AF;margin-top:2px}
-.card{background:#fff;border:1px solid #EDEBE4;border-radius:14px;padding:18px;margin-bottom:12px}
-.ct{font-size:14px;font-weight:700;color:#111;margin-bottom:12px;display:flex;align-items:center;gap:7px}
-.ct svg{width:15px;height:15px;flex-shrink:0}
-.scb{background:#ECFDF5;border:1px solid #A7F3D0;border-radius:10px;padding:11px 13px;margin-bottom:12px}
-.scb-r{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.scb-l{font-size:12px;font-weight:600;color:#065F46}.scb-n{font-size:15px;font-weight:700;color:#065F46}
-.bar{height:8px;background:rgba(5,150,105,.15);border-radius:4px;overflow:hidden}
-.bar-f{height:100%;border-radius:4px;background:#059669;transition:width 1s}
-.dn{background:#EEF2F9;border:1px solid #C3CFE2;border-radius:10px;padding:11px 12px;display:flex;gap:8px;margin-bottom:12px}
-.dn svg{flex-shrink:0;color:#1B2D4F;margin-top:1px;width:14px;height:14px}
-.dnl{font-size:11.5px;font-weight:700;color:#1B2D4F;margin-bottom:3px}
-.dnt{font-size:12px;color:#253F6B;line-height:1.55}
-.wn{background:#FFFBEB;border:1px solid #FDE68A;border-radius:10px;padding:11px 12px;display:flex;gap:8px;margin-bottom:12px}
-.wn svg{flex-shrink:0;color:#D97706;margin-top:1px;width:15px;height:15px}
-.wn p{font-size:12px;color:#92400E;line-height:1.55}
-.img-warn{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:11px 12px;display:none;gap:8px;margin-bottom:12px}
-.img-warn.on{display:flex}
-.img-warn svg{flex-shrink:0;color:#DC2626;margin-top:1px;width:15px;height:15px}
-.img-warn p{font-size:12px;color:#DC2626;line-height:1.55}
-.urgent-box{background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:11px 12px;display:none;gap:8px;margin-bottom:12px}
-.urgent-box.on{display:flex}
-.urgent-box svg{flex-shrink:0;color:#DC2626;margin-top:1px;width:15px;height:15px}
-.urgent-box p{font-size:12px;color:#DC2626;line-height:1.55}
-/* Loading */
-.loading-box{background:#fff;border:1px solid #EDEBE4;border-radius:14px;padding:36px 24px;text-align:center}
-.loading-spin{width:48px;height:48px;margin:0 auto 14px;border:3px solid #E5E7EB;border-top-color:#1B2D4F;border-radius:50%;animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-/* Filters */
-.flt{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
-.fb{font-size:12px;font-weight:600;padding:5px 12px;border-radius:20px;border:1.5px solid #E5E7EB;background:transparent;cursor:pointer;font-family:inherit;color:#6B7280;transition:all .12s}
-.fb.on{background:#1B2D4F;color:#fff;border-color:#1B2D4F}
-/* Findings */
-.fg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
-.fc{background:#fff;border:1px solid #EDEBE4;border-radius:12px;padding:14px;transition:border .15s}
-.fc:hover{border-color:#9CA3AF}
-.fr{display:flex;align-items:center;gap:5px;margin-bottom:7px;flex-wrap:wrap}
-.cf{font-size:11.5px;color:#9CA3AF;margin-left:auto;font-weight:600;flex-shrink:0}
-.fi{font-size:13px;font-weight:700;color:#111;margin-bottom:4px}
-.fn{font-size:12px;color:#374151;line-height:1.5;margin-bottom:6px}
-.fobs{font-size:11.5px;color:#1B2D4F;background:#EEF2F9;border-radius:6px;padding:5px 8px;margin-bottom:8px;line-height:1.4}
-.fobs strong{color:#1B2D4F}
-.ss{border-top:1px solid #F5F2EC;padding-top:8px}
-.ssl{font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
-.ag{display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:7px;font-size:10.5px;font-weight:700;margin-top:7px}
-.caution-note{font-size:11px;color:#D97706;background:#FFFBEB;border-radius:6px;padding:4px 8px;margin-top:5px;line-height:1.4}
-.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700}
-.bh{background:#EFF6FF;color:#1E40AF}.bt{background:#ECFDF5;color:#065F46}
-.bp{background:#F5F3FF;color:#4C1D95}.bhi{background:#FEF2F2;color:#991B1B}
-.bme{background:#FFFBEB;color:#92400E}.blo{background:#F9FAFB;color:#6B7280;border:1px solid #E5E7EB}
-.bor{background:#ECFDF5;color:#065F46}
-.ref-item{font-size:12px;color:#374151;line-height:1.65;padding:5px 0 5px 14px;position:relative;border-bottom:1px solid #F5F2EC}
-.ref-item:last-child{border-bottom:none}
-.ref-item::before{content:"·";position:absolute;left:3px;color:#C9A84C;font-weight:900;font-size:16px;top:3px;line-height:1}
-.eth{background:#FFF7ED;border:1px solid #FED7AA;border-radius:14px;padding:15px;display:flex;gap:12px;margin-bottom:12px}
-.eth svg{flex-shrink:0;color:#F97316;margin-top:2px;width:17px;height:17px}
-.et{font-size:13px;font-weight:700;color:#9A3412;margin-bottom:5px}
-.ed{font-size:12px;color:#C2410C;line-height:1.6}
-@media print{
-  .sb,.topbar,.flt,.no-print{display:none!important}
-  body{background:#fff;display:block}
-  .cnt{padding:14px}
-  .ly2{flex-direction:column}
-  .lp{width:100%;margin-bottom:12px}
-  .fg{grid-template-columns:1fr 1fr}
-}
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PsycoAI — Analiz Raporu</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f0eee9;
+        display: flex;
+        min-height: 100vh;
+        color: #111;
+      }
+      .sb {
+        width: 220px;
+        background: #1b2d4f;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        flex-shrink: 0;
+      }
+      .sb-top {
+        padding: 18px 18px 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .sb-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .sb-ln {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .sb-lt {
+        font-size: 9.5px;
+        color: rgba(255, 255, 255, 0.35);
+        margin-top: 1px;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+      .sb-nav {
+        padding: 10px 0;
+        flex: 1;
+      }
+      .sb-g {
+        font-size: 9px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.22);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        padding: 12px 18px 4px;
+      }
+      .sb-a {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 18px;
+        font-size: 13px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.55);
+        text-decoration: none;
+        border-left: 2px solid transparent;
+        transition: all 0.12s;
+      }
+      .sb-a svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+        opacity: 0.75;
+      }
+      .sb-a:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .sb-a.on {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        border-left-color: #c9a84c;
+        font-weight: 600;
+      }
+      .sb-ft {
+        padding: 13px 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .sb-u {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background 0.12s;
+        margin-bottom: 8px;
+      }
+      .sb-u:hover {
+        background: rgba(255, 255, 255, 0.07);
+      }
+      .sb-av {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .sb-un {
+        font-size: 12px;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+      }
+      .sb-ur {
+        font-size: 10.5px;
+        color: rgba(255, 255, 255, 0.38);
+      }
+      .sb-lo {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px;
+        color: rgba(255, 255, 255, 0.32);
+        cursor: pointer;
+        background: none;
+        border: none;
+        font-family: inherit;
+        padding: 0;
+      }
+      .sb-lo svg {
+        width: 13px;
+        height: 13px;
+      }
+      .main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+      }
+      .topbar {
+        background: #fff;
+        border-bottom: 1px solid #e8e5de;
+        padding: 13px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-shrink: 0;
+      }
+      .tl {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .bk {
+        width: 30px;
+        height: 30px;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: #9ca3af;
+        transition: all 0.1s;
+        flex-shrink: 0;
+      }
+      .bk:hover {
+        background: #f8f6f1;
+        color: #111;
+      }
+      .tt {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111;
+      }
+      .ts {
+        font-size: 11.5px;
+        color: #9ca3af;
+        margin-top: 1px;
+      }
+      .btn-p {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border: 1.5px solid #e5e7eb;
+        background: #fff;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.15s;
+      }
+      .btn-p:hover {
+        background: #1b2d4f;
+        color: #fff;
+        border-color: #1b2d4f;
+      }
+      .cnt {
+        padding: 20px 24px;
+        overflow-y: auto;
+        flex: 1;
+      }
+      .ly2 {
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+      }
+      .lp {
+        width: 220px;
+        flex-shrink: 0;
+      }
+      .rp {
+        flex: 1;
+        min-width: 0;
+      }
+      .db {
+        background: #fff;
+        border: 1px solid #edebe4;
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 12px;
+      }
+      .dbt {
+        font-size: 11px;
+        font-weight: 700;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 10px;
+      }
+      .di {
+        width: 100%;
+        border-radius: 9px;
+        border: 1px solid #edebe4;
+        background: #f8f6f1;
+        min-height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      .di img {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .ib {
+        background: #fff;
+        border: 1px solid #edebe4;
+        border-radius: 14px;
+        padding: 14px;
+        margin-bottom: 12px;
+      }
+      .ibt {
+        font-size: 11px;
+        font-weight: 700;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 10px;
+      }
+      .ir {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 5px 0;
+        border-bottom: 1px solid #f5f2ec;
+        font-size: 12px;
+        gap: 8px;
+      }
+      .ir:last-child {
+        border-bottom: none;
+      }
+      .ik {
+        color: #9ca3af;
+        font-weight: 500;
+        flex-shrink: 0;
+      }
+      .iv {
+        color: #111;
+        font-weight: 600;
+        text-align: right;
+        word-break: break-word;
+      }
+      .meta {
+        background: #f8f6f1;
+        border: 1px solid #edebe4;
+        border-radius: 12px;
+        padding: 13px;
+        margin-bottom: 12px;
+      }
+      .meta-t {
+        font-size: 12px;
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .meta-g {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 7px;
+        margin-bottom: 7px;
+      }
+      .meta-c {
+        text-align: center;
+        background: #fff;
+        border-radius: 8px;
+        padding: 9px 5px;
+        border: 1px solid #edebe4;
+      }
+      .meta-n {
+        font-size: 17px;
+        font-weight: 700;
+      }
+      .meta-l {
+        font-size: 10px;
+        color: #9ca3af;
+        margin-top: 2px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #edebe4;
+        border-radius: 14px;
+        padding: 18px;
+        margin-bottom: 12px;
+      }
+      .ct {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .ct svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+      }
+      .scb {
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        border-radius: 10px;
+        padding: 11px 13px;
+        margin-bottom: 12px;
+      }
+      .scb-r {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+      }
+      .scb-l {
+        font-size: 12px;
+        font-weight: 600;
+        color: #065f46;
+      }
+      .scb-n {
+        font-size: 15px;
+        font-weight: 700;
+        color: #065f46;
+      }
+      .bar {
+        height: 8px;
+        background: rgba(5, 150, 105, 0.15);
+        border-radius: 4px;
+        overflow: hidden;
+      }
+      .bar-f {
+        height: 100%;
+        border-radius: 4px;
+        background: #059669;
+        transition: width 1s;
+      }
+      .dn {
+        background: #eef2f9;
+        border: 1px solid #c3cfe2;
+        border-radius: 10px;
+        padding: 11px 12px;
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .dn svg {
+        flex-shrink: 0;
+        color: #1b2d4f;
+        margin-top: 1px;
+        width: 14px;
+        height: 14px;
+      }
+      .dnl {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #1b2d4f;
+        margin-bottom: 3px;
+      }
+      .dnt {
+        font-size: 12px;
+        color: #253f6b;
+        line-height: 1.55;
+      }
+      .wn {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-radius: 10px;
+        padding: 11px 12px;
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .wn svg {
+        flex-shrink: 0;
+        color: #d97706;
+        margin-top: 1px;
+        width: 15px;
+        height: 15px;
+      }
+      .wn p {
+        font-size: 12px;
+        color: #92400e;
+        line-height: 1.55;
+      }
+      .img-warn {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        padding: 11px 12px;
+        display: none;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .img-warn.on {
+        display: flex;
+      }
+      .img-warn svg {
+        flex-shrink: 0;
+        color: #dc2626;
+        margin-top: 1px;
+        width: 15px;
+        height: 15px;
+      }
+      .img-warn p {
+        font-size: 12px;
+        color: #dc2626;
+        line-height: 1.55;
+      }
+      .urgent-box {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        padding: 11px 12px;
+        display: none;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+      .urgent-box.on {
+        display: flex;
+      }
+      .urgent-box svg {
+        flex-shrink: 0;
+        color: #dc2626;
+        margin-top: 1px;
+        width: 15px;
+        height: 15px;
+      }
+      .urgent-box p {
+        font-size: 12px;
+        color: #dc2626;
+        line-height: 1.55;
+      }
+      /* Loading */
+      .loading-box {
+        background: #fff;
+        border: 1px solid #edebe4;
+        border-radius: 14px;
+        padding: 36px 24px;
+        text-align: center;
+      }
+      .loading-spin {
+        width: 48px;
+        height: 48px;
+        margin: 0 auto 14px;
+        border: 3px solid #e5e7eb;
+        border-top-color: #1b2d4f;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      /* Filters */
+      .flt {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .fb {
+        font-size: 12px;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 1.5px solid #e5e7eb;
+        background: transparent;
+        cursor: pointer;
+        font-family: inherit;
+        color: #6b7280;
+        transition: all 0.12s;
+      }
+      .fb.on {
+        background: #1b2d4f;
+        color: #fff;
+        border-color: #1b2d4f;
+      }
+      /* Findings */
+      .fg {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .fc {
+        background: #fff;
+        border: 1px solid #edebe4;
+        border-radius: 12px;
+        padding: 14px;
+        transition: border 0.15s;
+      }
+      .fc:hover {
+        border-color: #9ca3af;
+      }
+      .fr {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        margin-bottom: 7px;
+        flex-wrap: wrap;
+      }
+      .cf {
+        font-size: 11.5px;
+        color: #9ca3af;
+        margin-left: auto;
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+      .fi {
+        font-size: 13px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 4px;
+      }
+      .fn {
+        font-size: 12px;
+        color: #374151;
+        line-height: 1.5;
+        margin-bottom: 6px;
+      }
+      .fobs {
+        font-size: 11.5px;
+        color: #1b2d4f;
+        background: #eef2f9;
+        border-radius: 6px;
+        padding: 5px 8px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+      }
+      .fobs strong {
+        color: #1b2d4f;
+      }
+      .ss {
+        border-top: 1px solid #f5f2ec;
+        padding-top: 8px;
+      }
+      .ssl {
+        font-size: 10px;
+        font-weight: 700;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 5px;
+      }
+      .ag {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 8px;
+        border-radius: 7px;
+        font-size: 10.5px;
+        font-weight: 700;
+        margin-top: 7px;
+      }
+      .caution-note {
+        font-size: 11px;
+        color: #d97706;
+        background: #fffbeb;
+        border-radius: 6px;
+        padding: 4px 8px;
+        margin-top: 5px;
+        line-height: 1.4;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 2px 9px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 700;
+      }
+      .bh {
+        background: #eff6ff;
+        color: #1e40af;
+      }
+      .bt {
+        background: #ecfdf5;
+        color: #065f46;
+      }
+      .bp {
+        background: #f5f3ff;
+        color: #4c1d95;
+      }
+      .bhi {
+        background: #fef2f2;
+        color: #991b1b;
+      }
+      .bme {
+        background: #fffbeb;
+        color: #92400e;
+      }
+      .blo {
+        background: #f9fafb;
+        color: #6b7280;
+        border: 1px solid #e5e7eb;
+      }
+      .bor {
+        background: #ecfdf5;
+        color: #065f46;
+      }
+      .ref-item {
+        font-size: 12px;
+        color: #374151;
+        line-height: 1.65;
+        padding: 5px 0 5px 14px;
+        position: relative;
+        border-bottom: 1px solid #f5f2ec;
+      }
+      .ref-item:last-child {
+        border-bottom: none;
+      }
+      .ref-item::before {
+        content: '·';
+        position: absolute;
+        left: 3px;
+        color: #c9a84c;
+        font-weight: 900;
+        font-size: 16px;
+        top: 3px;
+        line-height: 1;
+      }
+      .eth {
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        border-radius: 14px;
+        padding: 15px;
+        display: flex;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .eth svg {
+        flex-shrink: 0;
+        color: #f97316;
+        margin-top: 2px;
+        width: 17px;
+        height: 17px;
+      }
+      .et {
+        font-size: 13px;
+        font-weight: 700;
+        color: #9a3412;
+        margin-bottom: 5px;
+      }
+      .ed {
+        font-size: 12px;
+        color: #c2410c;
+        line-height: 1.6;
+      }
+      @media print {
+        .sb,
+        .topbar,
+        .flt,
+        .no-print {
+          display: none !important;
+        }
+        body {
+          background: #fff;
+          display: block;
+        }
+        .cnt {
+          padding: 14px;
+        }
+        .ly2 {
+          flex-direction: column;
+        }
+        .lp {
+          width: 100%;
+          margin-bottom: 12px;
+        }
+        .fg {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sb no-print">
+      <div class="sb-top">
+        <a href="02_dashboard.html" class="sb-logo"
+          ><svg width="32" height="32" viewBox="0 0 34 34" fill="none">
+            <rect width="34" height="34" rx="9" fill="rgba(255,255,255,.12)" />
+            <g transform="translate(3,4)">
+              <rect
+                x="1"
+                y="10"
+                width="9"
+                height="8"
+                rx="1"
+                stroke="#C9A84C"
+                stroke-width="1.2"
+                fill="none"
+              />
+              <polygon
+                points="5.5,6 1,10 10,10"
+                stroke="#C9A84C"
+                stroke-width="1.2"
+                fill="none"
+                stroke-linejoin="round"
+              />
+              <line
+                x1="4"
+                y1="15"
+                x2="4"
+                y2="18"
+                stroke="#C9A84C"
+                stroke-width="1.2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="7"
+                y1="15"
+                x2="7"
+                y2="18"
+                stroke="#C9A84C"
+                stroke-width="1.2"
+                stroke-linecap="round"
+              />
+              <path
+                d="M14 14 Q15 11 17 13 Q18 9 20 12 Q22 10 22 14 Q22 17 18 18 Q14 17 14 14Z"
+                stroke="#C9A84C"
+                stroke-width="1.1"
+                fill="none"
+              />
+              <circle
+                cx="24"
+                cy="8"
+                r="2.2"
+                stroke="#C9A84C"
+                stroke-width="1.2"
+                fill="none"
+              />
+              <line
+                x1="24"
+                y1="10.2"
+                x2="24"
+                y2="15"
+                stroke="#C9A84C"
+                stroke-width="1.2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="21.5"
+                y1="12"
+                x2="26.5"
+                y2="12"
+                stroke="#C9A84C"
+                stroke-width="1.2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="24"
+                y1="15"
+                x2="22"
+                y2="18"
+                stroke="#C9A84C"
+                stroke-width="1.2"
+                stroke-linecap="round"
+              />
+              <line
+                x1="24"
+                y1="15"
+                x2="26"
+                y2="18"
+                stroke="#C9A84C"
+                stroke-width="1.2"
+                stroke-linecap="round"
+              />
+            </g>
+          </svg>
+          <div>
+            <div class="sb-ln">PsycoAI</div>
+            <div class="sb-lt">HTP Analiz</div>
+          </div></a
+        >
+      </div>
+      <nav class="sb-nav">
+        <div class="sb-g">Genel</div>
+        <a href="02_dashboard.html" class="sb-a on"
+          ><svg viewBox="0 0 15 15" fill="none">
+            <rect
+              x="1"
+              y="1"
+              width="5.5"
+              height="5.5"
+              rx="1"
+              stroke="currentColor"
+              stroke-width="1.2"
+            />
+            <rect
+              x="8.5"
+              y="1"
+              width="5.5"
+              height="5.5"
+              rx="1"
+              stroke="currentColor"
+              stroke-width="1.2"
+            />
+            <rect
+              x="1"
+              y="8.5"
+              width="5.5"
+              height="5.5"
+              rx="1"
+              stroke="currentColor"
+              stroke-width="1.2"
+            />
+            <rect
+              x="8.5"
+              y="8.5"
+              width="5.5"
+              height="5.5"
+              rx="1"
+              stroke="currentColor"
+              stroke-width="1.2"
+            /></svg
+          >Ana Sayfa</a
+        >
+        <a href="03_new_analysis.html" class="sb-a"
+          ><svg viewBox="0 0 15 15" fill="none">
+            <path
+              d="M7.5 2v9M5 6l2.5-4L10 6"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M2 11v1a2 2 0 002 2h7a2 2 0 002-2v-1"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+            /></svg
+          >Yeni Analiz</a
+        >
+        <div class="sb-g">Veri</div>
+        <a href="05_archive.html" class="sb-a"
+          ><svg viewBox="0 0 15 15" fill="none">
+            <rect
+              x="1"
+              y="3"
+              width="13"
+              height="10"
+              rx="1.5"
+              stroke="currentColor"
+              stroke-width="1.2"
+            />
+            <path d="M1 6h13" stroke="currentColor" stroke-width="1.2" />
+            <rect
+              x="4"
+              y="8.5"
+              width="7"
+              height="1.5"
+              rx=".75"
+              fill="currentColor"
+              opacity=".4"
+            /></svg
+          >Geçmiş Kayıtlar</a
+        >
+      </nav>
+      <div class="sb-ft">
+        <a href="06_profile.html" class="sb-u"
+          ><div class="sb-av" id="avEl">?</div>
+          <div>
+            <div class="sb-un" id="nmEl">—</div>
+            <div class="sb-ur" id="rlEl">—</div>
+          </div></a
+        >
+        <button class="sb-lo" onclick="logout()">
+          <svg viewBox="0 0 13 13" fill="none">
+            <path
+              d="M5 2H2v9h3M9 9l3-2.5L9 4M13 6.5H5"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            /></svg
+          >Çıkış
+        </button>
+      </div>
+    </aside>
 
-<aside class="sb no-print">
-  <div class="sb-top"><a href="02_dashboard.html" class="sb-logo"><svg width="32" height="32" viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="rgba(255,255,255,.12)"/><g transform="translate(3,4)"><rect x="1" y="10" width="9" height="8" rx="1" stroke="#C9A84C" stroke-width="1.2" fill="none"/><polygon points="5.5,6 1,10 10,10" stroke="#C9A84C" stroke-width="1.2" fill="none" stroke-linejoin="round"/><line x1="4" y1="15" x2="4" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><line x1="7" y1="15" x2="7" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><path d="M14 14 Q15 11 17 13 Q18 9 20 12 Q22 10 22 14 Q22 17 18 18 Q14 17 14 14Z" stroke="#C9A84C" stroke-width="1.1" fill="none"/><circle cx="24" cy="8" r="2.2" stroke="#C9A84C" stroke-width="1.2" fill="none"/><line x1="24" y1="10.2" x2="24" y2="15" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><line x1="21.5" y1="12" x2="26.5" y2="12" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><line x1="24" y1="15" x2="22" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/><line x1="24" y1="15" x2="26" y2="18" stroke="#C9A84C" stroke-width="1.2" stroke-linecap="round"/></g></svg><div><div class="sb-ln">PsycoAI</div><div class="sb-lt">HTP Analiz</div></div></a></div>
-  <nav class="sb-nav">
-    <div class="sb-g">Genel</div>
-    <a href="02_dashboard.html" class="sb-a on"><svg viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>Ana Sayfa</a>
-    <a href="03_new_analysis.html" class="sb-a"><svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2v9M5 6l2.5-4L10 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 11v1a2 2 0 002 2h7a2 2 0 002-2v-1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>Yeni Analiz</a>
-    <div class="sb-g">Veri</div>
-    <a href="05_archive.html" class="sb-a"><svg viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 6h13" stroke="currentColor" stroke-width="1.2"/><rect x="4" y="8.5" width="7" height="1.5" rx=".75" fill="currentColor" opacity=".4"/></svg>Geçmiş Kayıtlar</a>
-  </nav>
-  <div class="sb-ft">
-    <a href="06_profile.html" class="sb-u"><div class="sb-av" id="avEl">?</div><div><div class="sb-un" id="nmEl">—</div><div class="sb-ur" id="rlEl">—</div></div></a>
-    <button class="sb-lo" onclick="logout()"><svg viewBox="0 0 13 13" fill="none"><path d="M5 2H2v9h3M9 9l3-2.5L9 4M13 6.5H5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Çıkış</button>
-  </div>
-</aside>
-
-<div class="main">
-  <div class="topbar no-print">
-    <div class="tl">
-      <a href="02_dashboard.html" class="bk"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
-      <div><div class="tt" id="tbT">Analiz Raporu</div><div class="ts" id="tbS">—</div></div>
+    <div class="main">
+      <div class="topbar no-print">
+        <div class="tl">
+          <a href="02_dashboard.html" class="bk"
+            ><svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path
+                d="M9 2L4 7l5 5"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+              /></svg
+          ></a>
+          <div>
+            <div class="tt" id="tbT">Analiz Raporu</div>
+            <div class="ts" id="tbS">—</div>
+          </div>
+        </div>
+        <button class="btn-p no-print" onclick="window.print()">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path
+              d="M3 5V1h8v4M3 9H2a1 1 0 01-1-1V6a1 1 0 011-1h10a1 1 0 011 1v2a1 1 0 01-1 1h-1M3 7h8v6H3z"
+              stroke="currentColor"
+              stroke-width="1.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            /></svg
+          >PDF / Yazdır
+        </button>
+      </div>
+      <div class="cnt" id="mainContent">
+        <div class="loading-box">
+          <div class="loading-spin"></div>
+          <p
+            style="
+              font-size: 14px;
+              font-weight: 600;
+              color: #111;
+              margin-bottom: 6px;
+            "
+          >
+            Analiz Raporu Yükleniyor
+          </p>
+          <p style="font-size: 13px; color: #9ca3af">
+            Veriler PostgreSQL'den alınıyor...
+          </p>
+        </div>
+      </div>
     </div>
-    <button class="btn-p no-print" onclick="window.print()"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5V1h8v4M3 9H2a1 1 0 01-1-1V6a1 1 0 011-1h10a1 1 0 011 1v2a1 1 0 01-1 1h-1M3 7h8v6H3z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>PDF / Yazdır</button>
-  </div>
-  <div class="cnt" id="mainContent">
-    <div class="loading-box">
-      <div class="loading-spin"></div>
-      <p style="font-size:14px;font-weight:600;color:#111;margin-bottom:6px">Analiz Raporu Yükleniyor</p>
-      <p style="font-size:13px;color:#9CA3AF">Veriler PostgreSQL'den alınıyor...</p>
-    </div>
-  </div>
-</div>
 
-<script>
-var API_BASE = "http://localhost:8000";
+    <script>
+      var API_BASE = 'http://localhost:5000';
 
-function getToken(){return localStorage.getItem("psy_token");}
-function getUser(){return JSON.parse(localStorage.getItem("psy_user")||"null");}
-function authHeaders(){return{"Authorization":"Bearer "+getToken(),"Content-Type":"application/json"};}
-function logout(){localStorage.removeItem("psy_token");localStorage.removeItem("psy_user");window.location.href="01_login.html";}
+      function getToken() {
+        return localStorage.getItem('psy_token');
+      }
+      function getUser() {
+        return JSON.parse(localStorage.getItem('psy_user') || 'null');
+      }
+      function authHeaders() {
+        return {
+          Authorization: 'Bearer ' + getToken(),
+          'Content-Type': 'application/json',
+        };
+      }
+      function logout() {
+        localStorage.removeItem('psy_token');
+        localStorage.removeItem('psy_user');
+        window.location.href = '01_login.html';
+      }
 
-var CB={house:"bh",tree:"bt",person:"bp",general:"blo"};
-var CL={house:"Ev",tree:"Ağaç",person:"İnsan",general:"Genel"};
-var SB={high:"bhi",medium:"bme",med:"bme",low:"blo"};
-var SL={high:"Yüksek",medium:"Orta",med:"Orta",low:"Düşük"};
-var AG_MAP={high:{bg:"#ECFDF5",tc:"#065F46",txt:"Yüksek kaynak uyumu"},moderate:{bg:"#FFFBEB",tc:"#92400E",txt:"Orta kaynak uyumu"},low:{bg:"#FEF2F2",tc:"#991B1B",txt:"Kaynak çelişkisi"},conflicting:{bg:"#FEF2F2",tc:"#991B1B",txt:"Kaynak çelişkisi — dikkatli yorumla"}};
-var EMP_LABEL={strong:"Güçlü empirik destek",moderate:"Orta empirik destek",limited:"Sınırlı empirik destek",none:"Empirik destek yok"};
+      var CB = { house: 'bh', tree: 'bt', person: 'bp', general: 'blo' };
+      var CL = { house: 'Ev', tree: 'Ağaç', person: 'İnsan', general: 'Genel' };
+      var SB = { high: 'bhi', medium: 'bme', med: 'bme', low: 'blo' };
+      var SL = { high: 'Yüksek', medium: 'Orta', med: 'Orta', low: 'Düşük' };
+      var AG_MAP = {
+        high: { bg: '#ECFDF5', tc: '#065F46', txt: 'Yüksek kaynak uyumu' },
+        moderate: { bg: '#FFFBEB', tc: '#92400E', txt: 'Orta kaynak uyumu' },
+        low: { bg: '#FEF2F2', tc: '#991B1B', txt: 'Kaynak çelişkisi' },
+        conflicting: {
+          bg: '#FEF2F2',
+          tc: '#991B1B',
+          txt: 'Kaynak çelişkisi — dikkatli yorumla',
+        },
+      };
+      var EMP_LABEL = {
+        strong: 'Güçlü empirik destek',
+        moderate: 'Orta empirik destek',
+        limited: 'Sınırlı empirik destek',
+        none: 'Empirik destek yok',
+      };
 
-var allFindings=[];
+      var allFindings = [];
 
-function renderFindings(arr){
-  document.getElementById("fCount").textContent=arr.length;
-  if(!arr.length){document.getElementById("fg").innerHTML="<p style='color:#9CA3AF;font-size:13px;grid-column:1/-1;padding:8px'>Bu kategoride gösterge tespit edilmedi.</p>";return;}
-  var h="";
-  arr.forEach(function(d){
-    var sev=d.severity||"medium";
-    var cat=d.category||"general";
-    var ag=AG_MAP[d.source_agreement]||AG_MAP.moderate;
-    h+="<div class='fc'>";
-    h+="<div class='fr'><span class='badge "+(CB[cat]||"blo")+"'>"+(CL[cat]||cat)+"</span><span class='badge "+(SB[sev]||"blo")+"'>"+(SL[sev]||sev)+"</span>";
-    if(d.or_value)h+="<span class='badge bor' style='font-size:10px'>OR "+d.or_value+"</span>";
-    if(d.confidence)h+="<span class='cf'>%"+d.confidence+"</span>";
-    h+="</div>";
-    h+="<div class='fi'>"+escHtml(d.indicator)+"</div>";
-    if(d.observed)h+="<div class='fobs'><strong>Gözlemlenen:</strong> "+escHtml(d.observed)+"</div>";
-    h+="<div class='fn'>"+escHtml(d.interpretation)+"</div>";
-    h+="<div class='ss'>";
-    if(d.sources)h+="<div style='font-size:10px;color:#9CA3AF;margin-bottom:5px;font-style:italic'>"+escHtml(d.sources)+"</div>";
-    if(d.empirical_support)h+="<div style='font-size:10.5px;color:#6B7280;margin-bottom:4px'>"+escHtml(EMP_LABEL[d.empirical_support]||d.empirical_support)+"</div>";
-    h+="<div class='ag' style='background:"+ag.bg+";color:"+ag.tc+"'>"+ag.txt+"</div>";
-    if(d.cultural_note)h+="<div class='caution-note'>🌍 "+escHtml(d.cultural_note)+"</div>";
-    if(d.caution)h+="<div class='caution-note'>⚠️ "+escHtml(d.caution)+"</div>";
-    h+="</div></div>";
-  });
-  document.getElementById("fg").innerHTML=h;
-}
-function filt(cat,btn){
-  document.querySelectorAll(".fb").forEach(function(b){b.classList.remove("on");});
-  btn.classList.add("on");
-  renderFindings(cat==="all"?allFindings:allFindings.filter(function(d){return d.category===cat;}));
-}
-function escHtml(s){if(!s)return"";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+      function renderFindings(arr) {
+        document.getElementById('fCount').textContent = arr.length;
+        if (!arr.length) {
+          document.getElementById('fg').innerHTML =
+            "<p style='color:#9CA3AF;font-size:13px;grid-column:1/-1;padding:8px'>Bu kategoride gösterge tespit edilmedi.</p>";
+          return;
+        }
+        var h = '';
+        arr.forEach(function (d) {
+          var sev = d.severity || 'medium';
+          var cat = d.category || 'general';
+          var ag = AG_MAP[d.source_agreement] || AG_MAP.moderate;
+          h += "<div class='fc'>";
+          h +=
+            "<div class='fr'><span class='badge " +
+            (CB[cat] || 'blo') +
+            "'>" +
+            (CL[cat] || cat) +
+            "</span><span class='badge " +
+            (SB[sev] || 'blo') +
+            "'>" +
+            (SL[sev] || sev) +
+            '</span>';
+          if (d.or_value)
+            h +=
+              "<span class='badge bor' style='font-size:10px'>OR " +
+              d.or_value +
+              '</span>';
+          if (d.confidence)
+            h += "<span class='cf'>%" + d.confidence + '</span>';
+          h += '</div>';
+          h += "<div class='fi'>" + escHtml(d.indicator) + '</div>';
+          if (d.observed)
+            h +=
+              "<div class='fobs'><strong>Gözlemlenen:</strong> " +
+              escHtml(d.observed) +
+              '</div>';
+          h += "<div class='fn'>" + escHtml(d.interpretation) + '</div>';
+          h += "<div class='ss'>";
+          if (d.sources)
+            h +=
+              "<div style='font-size:10px;color:#9CA3AF;margin-bottom:5px;font-style:italic'>" +
+              escHtml(d.sources) +
+              '</div>';
+          if (d.empirical_support)
+            h +=
+              "<div style='font-size:10.5px;color:#6B7280;margin-bottom:4px'>" +
+              escHtml(EMP_LABEL[d.empirical_support] || d.empirical_support) +
+              '</div>';
+          h +=
+            "<div class='ag' style='background:" +
+            ag.bg +
+            ';color:' +
+            ag.tc +
+            "'>" +
+            ag.txt +
+            '</div>';
+          if (d.cultural_note)
+            h +=
+              "<div class='caution-note'>🌍 " +
+              escHtml(d.cultural_note) +
+              '</div>';
+          if (d.caution)
+            h +=
+              "<div class='caution-note'>⚠️ " + escHtml(d.caution) + '</div>';
+          h += '</div></div>';
+        });
+        document.getElementById('fg').innerHTML = h;
+      }
+      function filt(cat, btn) {
+        document.querySelectorAll('.fb').forEach(function (b) {
+          b.classList.remove('on');
+        });
+        btn.classList.add('on');
+        renderFindings(
+          cat === 'all'
+            ? allFindings
+            : allFindings.filter(function (d) {
+                return d.category === cat;
+              }),
+        );
+      }
+      function escHtml(s) {
+        if (!s) return '';
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;');
+      }
 
-function renderPage(a){
-  var u=getUser();
-  // Topbar
-  document.getElementById("tbT").textContent=a.child_name+" — Analiz Raporu";
-  document.getElementById("tbS").textContent=a.child_age+" yaş · "+a.drawing_label+" · "+a.ai_model;
-  // Sidebar
-  if(u){
-    document.getElementById("avEl").textContent=u.initials||"?";
-    document.getElementById("nmEl").textContent=u.name||"—";
-    document.getElementById("rlEl").textContent=u.roleLabel||"—";
-  }
+      function renderPage(a) {
+        var u = getUser();
+        // Topbar
+        document.getElementById('tbT').textContent =
+          a.child_name + ' — Analiz Raporu';
+        document.getElementById('tbS').textContent =
+          a.child_age + ' yaş · ' + a.drawing_label + ' · ' + a.ai_model;
+        // Sidebar
+        if (u) {
+          document.getElementById('avEl').textContent = u.initials || '?';
+          document.getElementById('nmEl').textContent = u.name || '—';
+          document.getElementById('rlEl').textContent = u.roleLabel || '—';
+        }
 
-  var imgQ=a.image_quality;
-  var score=a.agreement_score||0;
-  allFindings=a.findings||[];
+        var imgQ = a.image_quality;
+        var score = a.agreement_score || 0;
+        allFindings = a.findings || [];
 
-  var urgentFlags=[];
-  if(a.raw_ai_response&&a.raw_ai_response.urgent_flags)urgentFlags=a.raw_ai_response.urgent_flags;
+        var urgentFlags = [];
+        if (a.raw_ai_response && a.raw_ai_response.urgent_flags)
+          urgentFlags = a.raw_ai_response.urgent_flags;
 
-  var html='<div class="ly2">';
+        var html = '<div class="ly2">';
 
-  // ─── SOL ─────────────────────────────────────────────────────────────────
-  html+='<div class="lp">';
-  html+='<div class="db"><div class="dbt">HTP Çizimi</div>';
-  if(a.image_data_b64){
-    html+='<div class="di"><img src="'+escHtml(a.image_data_b64)+'" alt="HTP Çizimi"></div>';
-  } else {
-    html+='<div class="di" style="min-height:120px;align-items:center;justify-content:center;color:#C4C0B8;font-size:12px;flex-direction:column;gap:6px;display:flex"><svg width="32" height="32" viewBox="0 0 36 36" fill="none"><rect x="2" y="2" width="32" height="32" rx="6" stroke="currentColor" stroke-width="1.5"/><path d="M2 24l8-8 6 6 4-4 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Görsel bulunamadı</span></div>';
-  }
-  html+='</div>';
+        // ─── SOL ─────────────────────────────────────────────────────────────────
+        html += '<div class="lp">';
+        html += '<div class="db"><div class="dbt">HTP Çizimi</div>';
+        if (a.image_data_b64) {
+          html +=
+            '<div class="di"><img src="' +
+            escHtml(a.image_data_b64) +
+            '" alt="HTP Çizimi"></div>';
+        } else {
+          html +=
+            '<div class="di" style="min-height:120px;align-items:center;justify-content:center;color:#C4C0B8;font-size:12px;flex-direction:column;gap:6px;display:flex"><svg width="32" height="32" viewBox="0 0 36 36" fill="none"><rect x="2" y="2" width="32" height="32" rx="6" stroke="currentColor" stroke-width="1.5"/><path d="M2 24l8-8 6 6 4-4 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span>Görsel bulunamadı</span></div>';
+        }
+        html += '</div>';
 
-  if(imgQ==="poor"||imgQ==="unreadable"){
-    var imgNote=a.raw_ai_response&&a.raw_ai_response.image_quality_note?a.raw_ai_response.image_quality_note:"Görüntü kalitesi düşük.";
-    html+='<div class="img-warn on"><svg viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 4.5v4M7.5 10.5v.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><p>'+escHtml(imgNote)+'</p></div>';
-  }
+        if (imgQ === 'poor' || imgQ === 'unreadable') {
+          var imgNote =
+            a.raw_ai_response && a.raw_ai_response.image_quality_note
+              ? a.raw_ai_response.image_quality_note
+              : 'Görüntü kalitesi düşük.';
+          html +=
+            '<div class="img-warn on"><svg viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 4.5v4M7.5 10.5v.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><p>' +
+            escHtml(imgNote) +
+            '</p></div>';
+        }
 
-  html+='<div class="ib"><div class="ibt">Çocuk Bilgileri</div>';
-  html+='<div class="ir"><span class="ik">Ad Soyad</span><span class="iv">'+escHtml(a.child_name)+'</span></div>';
-  html+='<div class="ir"><span class="ik">Yaş</span><span class="iv">'+a.child_age+' yaş</span></div>';
-  html+='<div class="ir"><span class="ik">Çizim</span><span class="iv">'+escHtml(a.drawing_label)+'</span></div>';
-  html+='<div class="ir"><span class="ik">Tarih</span><span class="iv">'+new Date(a.created_at).toLocaleDateString("tr-TR")+'</span></div>';
-  html+='<div class="ir"><span class="ik">AI Model</span><span class="iv" style="font-size:11px">'+escHtml(a.ai_model||"—")+'</span></div>';
-  if(a.processing_ms)html+='<div class="ir"><span class="ik">İşlem Süresi</span><span class="iv">'+(a.processing_ms/1000).toFixed(1)+' sn</span></div>';
-  html+='</div>';
+        html += '<div class="ib"><div class="ibt">Çocuk Bilgileri</div>';
+        html +=
+          '<div class="ir"><span class="ik">Ad Soyad</span><span class="iv">' +
+          escHtml(a.child_name) +
+          '</span></div>';
+        html +=
+          '<div class="ir"><span class="ik">Yaş</span><span class="iv">' +
+          a.child_age +
+          ' yaş</span></div>';
+        html +=
+          '<div class="ir"><span class="ik">Çizim</span><span class="iv">' +
+          escHtml(a.drawing_label) +
+          '</span></div>';
+        html +=
+          '<div class="ir"><span class="ik">Tarih</span><span class="iv">' +
+          new Date(a.created_at).toLocaleDateString('tr-TR') +
+          '</span></div>';
+        html +=
+          '<div class="ir"><span class="ik">AI Model</span><span class="iv" style="font-size:11px">' +
+          escHtml(a.ai_model || '—') +
+          '</span></div>';
+        if (a.processing_ms)
+          html +=
+            '<div class="ir"><span class="ik">İşlem Süresi</span><span class="iv">' +
+            (a.processing_ms / 1000).toFixed(1) +
+            ' sn</span></div>';
+        html += '</div>';
 
-  if(u){
-    html+='<div class="ib"><div class="ibt">Değerlendiren</div>';
-    html+='<div class="ir"><span class="ik">Uzman</span><span class="iv">'+escHtml(u.name)+'</span></div>';
-    html+='<div class="ir"><span class="ik">Unvan</span><span class="iv">'+escHtml(u.roleLabel)+'</span></div>';
-    if(u.institution)html+='<div class="ir"><span class="ik">Kurum</span><span class="iv">'+escHtml(u.institution+(u.city?", "+u.city:""))+'</span></div>';
-    html+='</div>';
-  }
+        if (u) {
+          html += '<div class="ib"><div class="ibt">Değerlendiren</div>';
+          html +=
+            '<div class="ir"><span class="ik">Uzman</span><span class="iv">' +
+            escHtml(u.name) +
+            '</span></div>';
+          html +=
+            '<div class="ir"><span class="ik">Unvan</span><span class="iv">' +
+            escHtml(u.roleLabel) +
+            '</span></div>';
+          if (u.institution)
+            html +=
+              '<div class="ir"><span class="ik">Kurum</span><span class="iv">' +
+              escHtml(u.institution + (u.city ? ', ' + u.city : '')) +
+              '</span></div>';
+          html += '</div>';
+        }
 
-  html+='<div class="meta"><div class="meta-t"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#374151" stroke-width="1.1"/><path d="M6.5 4v2.5M6.5 8.5v.3" stroke="#374151" stroke-width="1.1" stroke-linecap="round"/></svg>Meta-Analiz (Frontiers 2022)</div>';
-  html+='<div class="meta-g"><div class="meta-c"><div class="meta-n" style="color:#DC2626">4.20</div><div class="meta-l">Bütün OR</div></div><div class="meta-c"><div class="meta-n" style="color:#D97706">3.95</div><div class="meta-l">Ev OR</div></div><div class="meta-c"><div class="meta-n" style="color:#059669">2.70</div><div class="meta-l">Ağaç OR</div></div></div>';
-  html+='<p style="font-size:10px;color:#9CA3AF;line-height:1.4">30 çalışma · 6.295 katılımcı</p></div>';
+        html +=
+          '<div class="meta"><div class="meta-t"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5" stroke="#374151" stroke-width="1.1"/><path d="M6.5 4v2.5M6.5 8.5v.3" stroke="#374151" stroke-width="1.1" stroke-linecap="round"/></svg>Meta-Analiz (Frontiers 2022)</div>';
+        html +=
+          '<div class="meta-g"><div class="meta-c"><div class="meta-n" style="color:#DC2626">4.20</div><div class="meta-l">Bütün OR</div></div><div class="meta-c"><div class="meta-n" style="color:#D97706">3.95</div><div class="meta-l">Ev OR</div></div><div class="meta-c"><div class="meta-n" style="color:#059669">2.70</div><div class="meta-l">Ağaç OR</div></div></div>';
+        html +=
+          '<p style="font-size:10px;color:#9CA3AF;line-height:1.4">30 çalışma · 6.295 katılımcı</p></div>';
 
-  html+='</div>'; // lp end
+        html += '</div>'; // lp end
 
-  // ─── SAĞ ─────────────────────────────────────────────────────────────────
-  html+='<div class="rp">';
+        // ─── SAĞ ─────────────────────────────────────────────────────────────────
+        html += '<div class="rp">';
 
-  // Psikometrik uyarı
-  html+='<div class="wn"><svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2L13 12H2L7.5 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M7.5 6v3M7.5 10.5v.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><p><strong>Psikometrik Sınırlılık (Groth-Marnat 2009; Lilienfeld ve ark. 2000):</strong> Hiçbir tek gösterge tek başına kesin yorum sağlamaz. Bu rapor uzman kararını destekler, yerini almaz.</p></div>';
+        // Psikometrik uyarı
+        html +=
+          '<div class="wn"><svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2L13 12H2L7.5 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M7.5 6v3M7.5 10.5v.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><p><strong>Psikometrik Sınırlılık (Groth-Marnat 2009; Lilienfeld ve ark. 2000):</strong> Hiçbir tek gösterge tek başına kesin yorum sağlamaz. Bu rapor uzman kararını destekler, yerini almaz.</p></div>';
 
-  // Acil uyarılar
-  if(urgentFlags.length||a.urgent_flag_count>0){
-    html+='<div class="urgent-box on"><svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2L13 12H2L7.5 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M7.5 6v3M7.5 10.5v.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><div><strong style="font-size:12px;color:#DC2626;display:block;margin-bottom:3px">Acil Klinisyen Değerlendirmesi Önerilir</strong>';
-    if(urgentFlags.length){html+='<ul style="font-size:12px;color:#DC2626;padding-left:16px;line-height:1.7">';urgentFlags.forEach(function(f){html+="<li>"+escHtml(f)+"</li>";});html+="</ul>";}
-    else html+='<p style="font-size:12px;color:#DC2626">Bu analizde dikkat gerektiren yüksek öncelikli göstergeler tespit edilmiştir.</p>';
-    html+='</div></div>';
-  }
+        // Acil uyarılar
+        if (urgentFlags.length || a.urgent_flag_count > 0) {
+          html +=
+            '<div class="urgent-box on"><svg viewBox="0 0 15 15" fill="none"><path d="M7.5 2L13 12H2L7.5 2z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/><path d="M7.5 6v3M7.5 10.5v.3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><div><strong style="font-size:12px;color:#DC2626;display:block;margin-bottom:3px">Acil Klinisyen Değerlendirmesi Önerilir</strong>';
+          if (urgentFlags.length) {
+            html +=
+              '<ul style="font-size:12px;color:#DC2626;padding-left:16px;line-height:1.7">';
+            urgentFlags.forEach(function (f) {
+              html += '<li>' + escHtml(f) + '</li>';
+            });
+            html += '</ul>';
+          } else
+            html +=
+              '<p style="font-size:12px;color:#DC2626">Bu analizde dikkat gerektiren yüksek öncelikli göstergeler tespit edilmiştir.</p>';
+          html += '</div></div>';
+        }
 
-  // Genel değerlendirme
-  html+='<div class="card"><div class="ct"><svg viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="#059669" stroke-width="1.2"/><path d="M7.5 5v3l2 1.5" stroke="#059669" stroke-width="1.2" stroke-linecap="round"/></svg>Genel Değerlendirme</div>';
-  html+='<p id="sumTxtEl" style="font-size:13px;color:#374151;line-height:1.7;margin-bottom:12px">'+escHtml(a.summary_text||"Analiz tamamlandı.")+'</p>';
-  html+='<div class="scb"><div class="scb-r"><span class="scb-l">Çoklu kaynak uyum skoru</span><span class="scb-n">%'+Math.round(score)+'</span></div><div class="bar"><div class="bar-f" id="scoreBar" style="width:0%"></div></div><div style="font-size:11px;color:#065F46;margin-top:5px;line-height:1.4;opacity:.8">Her gösterge için kaynaklar arası uyumun ortalamasıdır. OR değerleri meta-analizden alınmıştır.</div></div></div>';
+        // Genel değerlendirme
+        html +=
+          '<div class="card"><div class="ct"><svg viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="5.5" stroke="#059669" stroke-width="1.2"/><path d="M7.5 5v3l2 1.5" stroke="#059669" stroke-width="1.2" stroke-linecap="round"/></svg>Genel Değerlendirme</div>';
+        html +=
+          '<p id="sumTxtEl" style="font-size:13px;color:#374151;line-height:1.7;margin-bottom:12px">' +
+          escHtml(a.summary_text || 'Analiz tamamlandı.') +
+          '</p>';
+        html +=
+          '<div class="scb"><div class="scb-r"><span class="scb-l">Çoklu kaynak uyum skoru</span><span class="scb-n">%' +
+          Math.round(score) +
+          '</span></div><div class="bar"><div class="bar-f" id="scoreBar" style="width:0%"></div></div><div style="font-size:11px;color:#065F46;margin-top:5px;line-height:1.4;opacity:.8">Her gösterge için kaynaklar arası uyumun ortalamasıdır. OR değerleri meta-analizden alınmıştır.</div></div></div>';
 
-  // Gelişimsel bağlam
-  if(a.dev_note){
-    html+='<div class="dn"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/><path d="M4 5h6M4 7.5h4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><div><div class="dnl">Gelişimsel Bağlam</div><div class="dnt">'+escHtml(a.dev_note)+'</div></div></div>';
-  }
+        // Gelişimsel bağlam
+        if (a.dev_note) {
+          html +=
+            '<div class="dn"><svg viewBox="0 0 14 14" fill="none"><path d="M2 2h10v10H2z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/><path d="M4 5h6M4 7.5h4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg><div><div class="dnl">Gelişimsel Bağlam</div><div class="dnt">' +
+            escHtml(a.dev_note) +
+            '</div></div></div>';
+        }
 
-  // Bulgular
-  html+='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">';
-  html+='<div style="font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.07em">Bulgular — <span id="fCount">0</span> gösterge</div>';
-  html+='<div class="flt no-print" id="filters"></div></div>';
-  html+='<div class="fg" id="fg"><p style="color:#9CA3AF;font-size:13px;grid-column:1/-1;padding:8px">Yükleniyor...</p></div>';
+        // Bulgular
+        html +=
+          '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">';
+        html +=
+          '<div style="font-size:11px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.07em">Bulgular — <span id="fCount">0</span> gösterge</div>';
+        html += '<div class="flt no-print" id="filters"></div></div>';
+        html +=
+          '<div class="fg" id="fg"><p style="color:#9CA3AF;font-size:13px;grid-column:1/-1;padding:8px">Yükleniyor...</p></div>';
 
-  // Kaynaklar
-  html+='<div class="card"><div class="ct"><svg viewBox="0 0 15 15" fill="none"><path d="M3 2h9v11H3z" stroke="#9CA3AF" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 5.5h5M5 8h3" stroke="#9CA3AF" stroke-width="1.2" stroke-linecap="round"/></svg>Akademik Kaynaklar (27)</div>';
-  ["Buck, J.N. (1948). H-T-P technique. Journal of Clinical Psychology, 4, 317–396.",
-   "Buck, J.N., & Hammer, E.F. (1969). Advances in House-Tree-Person techniques. WPS.",
-   "Hammer, E.F. (1958 & 1997). The clinical application of projective drawings. Charles C. Thomas.",
-   "Jolles, I.A. (1964). A catalogue for the qualitative interpretation of the H-T-P. WPS.",
-   "Machover, K. (1949). Personality projection in the drawing of the human figure. Charles C. Thomas.",
-   "Koch, C. (1952). The tree test. Hans Huber.",
-   "Bolander, K. (1977). Assessing personality through tree drawings. Basic Books.",
-   "Koppitz, E.M. (1968 & 1984). Psychological evaluation of children's human figure drawings. Grune & Stratton.",
-   "Di Leo, J.H. (1973 & 1983). Children's drawings as diagnostic aids. Brunner/Mazel.",
-   "Burns, R.C., & Kaufman, S.H. (1972). Actions, styles and symbols in KFD. Brunner/Mazel.",
-   "Lowenfeld, V. (1947). Creative and mental growth. Macmillan.",
-   "Urban, W.H. (1963). The Draw-A-Person catalogue. WPS.",
-   "Oster, G.D., & Gould, P. (1987 & 2004). Using drawings in assessment and therapy. Brunner-Routledge.",
-   "Handler, L. (1996). The clinical issues of figure drawings. Major Psychological Assessment Instruments.",
-   "Groth-Marnat, G. (2009). Handbook of psychological assessment (5th ed.). Wiley.",
-   "Garb, H.N. ve ark. (2002). Effective use of projective techniques. Professional Psychology, 5, 454–463.",
-   "Lilienfeld, S.O. ve ark. (2000). Scientific status of projective techniques. Psychological Science in the Public Interest.",
-   "Kahill, S. (1984). Human figure drawing in adults. Canadian Psychology, 25(4).",
-   "Klepsch, M., & Logie, L. (1982). Children draw and tell. Brunner/Mazel.",
-   "Chen, Z. ve ark. (2022). HTP for mental disorders: Meta-analysis (n=6295). Frontiers in Psychiatry, 13, 1041770.",
-   "Yan, Y., & Chen, P. (2012). Tree Drawing Test for adolescent depression. Chinese J. Clinical Psychology.",
-   "Matto, H.C. (2002). Investigating validity of Draw-A-Person. Psychological Assessment, 14(2).",
-  ].forEach(function(r){html+='<div class="ref-item">'+escHtml(r)+'</div>';});
-  html+='</div>';
+        // Kaynaklar
+        html +=
+          '<div class="card"><div class="ct"><svg viewBox="0 0 15 15" fill="none"><path d="M3 2h9v11H3z" stroke="#9CA3AF" stroke-width="1.2" stroke-linejoin="round"/><path d="M5 5.5h5M5 8h3" stroke="#9CA3AF" stroke-width="1.2" stroke-linecap="round"/></svg>Akademik Kaynaklar (27)</div>';
+        [
+          'Buck, J.N. (1948). H-T-P technique. Journal of Clinical Psychology, 4, 317–396.',
+          'Buck, J.N., & Hammer, E.F. (1969). Advances in House-Tree-Person techniques. WPS.',
+          'Hammer, E.F. (1958 & 1997). The clinical application of projective drawings. Charles C. Thomas.',
+          'Jolles, I.A. (1964). A catalogue for the qualitative interpretation of the H-T-P. WPS.',
+          'Machover, K. (1949). Personality projection in the drawing of the human figure. Charles C. Thomas.',
+          'Koch, C. (1952). The tree test. Hans Huber.',
+          'Bolander, K. (1977). Assessing personality through tree drawings. Basic Books.',
+          "Koppitz, E.M. (1968 & 1984). Psychological evaluation of children's human figure drawings. Grune & Stratton.",
+          "Di Leo, J.H. (1973 & 1983). Children's drawings as diagnostic aids. Brunner/Mazel.",
+          'Burns, R.C., & Kaufman, S.H. (1972). Actions, styles and symbols in KFD. Brunner/Mazel.',
+          'Lowenfeld, V. (1947). Creative and mental growth. Macmillan.',
+          'Urban, W.H. (1963). The Draw-A-Person catalogue. WPS.',
+          'Oster, G.D., & Gould, P. (1987 & 2004). Using drawings in assessment and therapy. Brunner-Routledge.',
+          'Handler, L. (1996). The clinical issues of figure drawings. Major Psychological Assessment Instruments.',
+          'Groth-Marnat, G. (2009). Handbook of psychological assessment (5th ed.). Wiley.',
+          'Garb, H.N. ve ark. (2002). Effective use of projective techniques. Professional Psychology, 5, 454–463.',
+          'Lilienfeld, S.O. ve ark. (2000). Scientific status of projective techniques. Psychological Science in the Public Interest.',
+          'Kahill, S. (1984). Human figure drawing in adults. Canadian Psychology, 25(4).',
+          'Klepsch, M., & Logie, L. (1982). Children draw and tell. Brunner/Mazel.',
+          'Chen, Z. ve ark. (2022). HTP for mental disorders: Meta-analysis (n=6295). Frontiers in Psychiatry, 13, 1041770.',
+          'Yan, Y., & Chen, P. (2012). Tree Drawing Test for adolescent depression. Chinese J. Clinical Psychology.',
+          'Matto, H.C. (2002). Investigating validity of Draw-A-Person. Psychological Assessment, 14(2).',
+        ].forEach(function (r) {
+          html += '<div class="ref-item">' + escHtml(r) + '</div>';
+        });
+        html += '</div>';
 
-  // Etik
-  html+='<div class="eth"><svg viewBox="0 0 17 17" fill="none"><path d="M8.5 1.5l2 4.2 4.5.65-3.25 3.17.77 4.48-4.02-2.12-4.02 2.12.77-4.48L2 6.35l4.5-.65L8.5 1.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><div><div class="et">Etik Sorumluluk Bildirimi</div><div class="ed">Bu rapor yalnızca karar destek amacı taşımaktadır. Yapay zekâ tarafından üretilen bulgular uzman psikolojik danışman değerlendirmesinin yerine geçmez. Tanı yetkisi yalnızca uzmana aittir. APA Etik İlkeleri (2017) ve Türk Psikologlar Derneği Etik Kuralları çerçevesinde nihai değerlendirme mutlaka nitelikli bir profesyonel tarafından yapılmalıdır.</div></div></div>';
+        // Etik
+        html +=
+          '<div class="eth"><svg viewBox="0 0 17 17" fill="none"><path d="M8.5 1.5l2 4.2 4.5.65-3.25 3.17.77 4.48-4.02-2.12-4.02 2.12.77-4.48L2 6.35l4.5-.65L8.5 1.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg><div><div class="et">Etik Sorumluluk Bildirimi</div><div class="ed">Bu rapor yalnızca karar destek amacı taşımaktadır. Yapay zekâ tarafından üretilen bulgular uzman psikolojik danışman değerlendirmesinin yerine geçmez. Tanı yetkisi yalnızca uzmana aittir. APA Etik İlkeleri (2017) ve Türk Psikologlar Derneği Etik Kuralları çerçevesinde nihai değerlendirme mutlaka nitelikli bir profesyonel tarafından yapılmalıdır.</div></div></div>';
 
-  html+='</div></div>'; // rp + ly2 end
+        html += '</div></div>'; // rp + ly2 end
 
-  document.getElementById("mainContent").innerHTML=html;
+        document.getElementById('mainContent').innerHTML = html;
 
-  // Score animasyonu
-  setTimeout(function(){var b=document.getElementById("scoreBar");if(b)b.style.width=Math.round(score)+"%";},300);
+        // Score animasyonu
+        setTimeout(function () {
+          var b = document.getElementById('scoreBar');
+          if (b) b.style.width = Math.round(score) + '%';
+        }, 300);
 
-  // Filtreler
-  var cats=["all","house","tree","person"];
-  var lbl={all:"Tümü ("+allFindings.length+")",house:"Ev",tree:"Ağaç",person:"İnsan"};
-  var fh="";
-  cats.forEach(function(c){fh+="<button class='fb"+(c==="all"?" on":"")+"' onclick=\"filt('"+c+"',this)\">"+lbl[c]+"</button>";});
-  document.getElementById("filters").innerHTML=fh;
-  renderFindings(allFindings);
-}
+        // Filtreler
+        var cats = ['all', 'house', 'tree', 'person'];
+        var lbl = {
+          all: 'Tümü (' + allFindings.length + ')',
+          house: 'Ev',
+          tree: 'Ağaç',
+          person: 'İnsan',
+        };
+        var fh = '';
+        cats.forEach(function (c) {
+          fh +=
+            "<button class='fb" +
+            (c === 'all' ? ' on' : '') +
+            "' onclick=\"filt('" +
+            c +
+            '\',this)">' +
+            lbl[c] +
+            '</button>';
+        });
+        document.getElementById('filters').innerHTML = fh;
+        renderFindings(allFindings);
+      }
 
-/* ── Ana yükleme ── */
-async function loadAnalysis(){
-  if(!getToken()){logout();return;}
-  var id=new URLSearchParams(window.location.search).get("id");
-  if(!id){window.location.href="02_dashboard.html";return;}
-  try{
-    var res=await fetch(API_BASE+"/api/analyses/"+id,{headers:authHeaders()});
-    if(res.status===401){logout();return;}
-    if(res.status===404){document.getElementById("mainContent").innerHTML='<div style="text-align:center;padding:48px;color:#9CA3AF"><p style="font-size:15px;font-weight:600">Analiz bulunamadı.</p><a href="02_dashboard.html" style="color:#1B2D4F;font-weight:600;text-decoration:none;margin-top:12px;display:inline-block">← Ana Sayfaya Dön</a></div>';return;}
-    var data=await res.json();
-    renderPage(data);
-  }catch(err){
-    document.getElementById("mainContent").innerHTML='<div style="text-align:center;padding:48px;color:#DC2626"><p style="font-size:14px;font-weight:600">Yükleme hatası: '+err.message+'</p></div>';
-  }
-}
-loadAnalysis();
-</script>
-</body>
+      /* ── Ana yükleme ── */
+      async function loadAnalysis() {
+        if (!getToken()) {
+          logout();
+          return;
+        }
+        var id = new URLSearchParams(window.location.search).get('id');
+        if (!id) {
+          window.location.href = '02_dashboard.html';
+          return;
+        }
+        try {
+          var res = await fetch(API_BASE + '/api/analyses/' + id, {
+            headers: authHeaders(),
+          });
+          if (res.status === 401) {
+            logout();
+            return;
+          }
+          if (res.status === 404) {
+            document.getElementById('mainContent').innerHTML =
+              '<div style="text-align:center;padding:48px;color:#9CA3AF"><p style="font-size:15px;font-weight:600">Analiz bulunamadı.</p><a href="02_dashboard.html" style="color:#1B2D4F;font-weight:600;text-decoration:none;margin-top:12px;display:inline-block">← Ana Sayfaya Dön</a></div>';
+            return;
+          }
+          var data = await res.json();
+          renderPage(data);
+        } catch (err) {
+          document.getElementById('mainContent').innerHTML =
+            '<div style="text-align:center;padding:48px;color:#DC2626"><p style="font-size:14px;font-weight:600">Yükleme hatası: ' +
+            err.message +
+            '</p></div>';
+        }
+      }
+      loadAnalysis();
+    </script>
+  </body>
 </html>
