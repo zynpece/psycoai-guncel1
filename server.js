@@ -281,6 +281,14 @@ app.get("/api/analyses/:id", authMiddleware, async (req, res) => {
 
 app.use("/uploads", express.static(require("path").join(__dirname, "uploads")));
 
+// ── STATS ──
+app.get("/api/stats", authMiddleware, async (req, res) => {
+  try {
+    const r = await pool.query("SELECT COUNT(*) as total, COUNT(CASE WHEN created_at > NOW() - INTERVAL '30 days' THEN 1 END) as monthly FROM analyses WHERE user_id = $1", [req.user.id]);
+    res.json(r.rows[0]);
+  } catch(err){ res.status(500).json({detail: err.message}); }
+});
+
 // SERVER
 app.listen(5000, () => {
   console.log('Server çalışıyor: http://localhost:5000');
