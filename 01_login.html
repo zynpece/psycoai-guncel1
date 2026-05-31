@@ -94,7 +94,18 @@ input:focus{border-color:#1B2D4F;box-shadow:0 0 0 3px rgba(27,45,79,.1);backgrou
 <script>
 var API_BASE = "http://localhost:5000";
 
-if(localStorage.getItem("psy_token")){window.location.href="02_dashboard.html";}
+//if(localStorage.getItem("psy_token")){window.location.href="02_dashboard.html";}
+
+(async function(){
+  var token = localStorage.getItem("psy_token");
+  if(token){
+    try{
+      var res = await fetch("http://localhost:5000/api/me", {headers:{"Authorization":"Bearer "+token}});
+      if(res.ok){window.location.href="02_dashboard.html";}
+      else{localStorage.clear();}
+    }catch(e){localStorage.clear();}
+  }
+})();
 if(new URLSearchParams(window.location.search).get("registered")==="1"){
   document.getElementById("okBanner").style.display="block";
 }
